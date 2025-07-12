@@ -11,7 +11,7 @@
 	<groupId>org.kosta</groupId>
 	<artifactId>spring08-3-IOC-DI-CommandLineRunner-joy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring08-IOC-DI-CommandLineRunner-joy</name>
+	<name>spring08-3-IOC-DI-CommandLineRunner-joy</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
