@@ -1,6 +1,7 @@
 package org.kosa.myproject.model;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import java.util.List;
+
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -13,11 +14,22 @@ public class WorkerService {
 	private final Tool tool;// 추상에 의존해야 함 
 	//@Autowired // 타입에 맞는 bean(spring 관리 객체)을 IOC 컨테이너가 주입한다 DI
 	//@Qualifier("poclain") //: 동일한 타입의 bean이 여러개 존재시 특정 bean을 지정해 DI 	
-	public WorkerService(@Qualifier("poclain")   Tool tool) {
+	
+	
+	// 이 경우 WorkerService required a single bean, but 3 were found:
+	// Poclain 에 @Primary 를 명시해본다 
+	// 또한 모든 Tool 컴포넌트를 한번에 받을 수 있다 
+	private List<Tool> toolList;
+	public WorkerService(Tool tool,List<Tool> toolList) { // 이렇게 모든 툴을 다 받을 수도 있음 
 		super();  
 		this.tool = tool;
-		System.out.println(getClass().getName()+" 객체 생성, tool DI 주입받음 "+tool);
+		System.out.println(getClass().getName()+" 객체 생성, tool DI 주입받음 "+tool+" toolList:"+toolList);
 	}
+//	public WorkerService(@Qualifier("poclain")   Tool tool) {
+//		super();  
+//		this.tool = tool;
+//		System.out.println(getClass().getName()+" 객체 생성, tool DI 주입받음 "+tool);
+//	}
 	/**/
 	//setter 도 di 가능
 	/*
@@ -39,6 +51,7 @@ public class WorkerService {
 		System.out.println("일꾼이 서비스를 시작하다");
 		//Hammer or Spade or Poclain 을 이용해 작업한다 
 		tool.work();
+		System.out.println("toolList:"+toolList);
 		System.out.println("일꾼이 서비스를 마무리하다");
 	}
 	//@PreDestroy
