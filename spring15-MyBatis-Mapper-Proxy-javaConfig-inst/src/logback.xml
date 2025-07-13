@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	scan="true" scanPeriod="30 seconds" 
+	주기적으로 configuration 파일을 읽어 Logback의 설정을 재구성
+	Application실행중일때 별도의 재시작없이 설정 파일을 수정하고 적용가능 
+	scanPeriod  default 1분 
+ -->
+<configuration scan="true" scanPeriod="30 seconds">
+<!-- 
+        콘솔 로깅
+        encoder  Pattern로그 출력 포맷
+		%d{HH:mm}은 로그 출력 시간 포맷
+		%-5level은 로그 레벨  5 고정폭  출력
+		%logger는 logger의 이름 출력 { }  length
+		%msg    사용자 메시지 출력
+		%n  줄바꿈
+  -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+<!-- 
+    파일 로깅 
+	RollingFileAppender : 일별로 로그 파일을 백업하면서 로깅
+	maxHistory : 30일 지나면 오래된 순서부터 로그파일을 지워준다 
+ -->
+ 
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>report.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>report-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+  <!--  특정 패키지 이하 로깅 레별을 별도로 설정 가능  -->
+    <logger name="org.springframework" level="warn"/>
+    <logger name="org.kosta.myproject" level="debug"/>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+<!--         <appender-ref ref="FILE"/> -->
+    </root>
+</configuration>

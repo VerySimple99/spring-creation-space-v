@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosta.myproject.model.mapper.MovieMapper">
+	<!-- has a 관계(MovieVO has a DirectorVO)는 인스턴스변수.인스턴스변수로 insert 가능 -->
+	<insert id="register"
+		parameterType="org.kosta.myproject.model.vo.MovieVO">
+		insert into movie(movie_id,genre,title,attendance,director_id)
+		values(movie_seq.nextval,#{genre},#{title},#{attendance},#{directorVO.directorId})
+	</insert>
+	<!-- resultmap : has a 관계상에서 조회시 반환되는 정보를 처리하는 역할 MovieVO has a DirectorVO 
+		에서 join sql 을 실행하여 directorVO 의 directorName 을 저장할 수 있게 한다 아래는 영화 리스트 화면을 
+		위한 resultmap 임 ( 영화아이디,타이틀,감독명(has a 정보) ) -->
+	<resultMap type="org.kosta.myproject.model.vo.MovieVO"
+		id="movieListRM">
+		<result column="director_name"
+			property="directorVO.directorName" />
+	</resultMap>
+	<select id="findMovieList" resultMap="movieListRM">
+		SELECT m.movie_id,m.title,d.director_name
+		FROM movie m
+		INNER JOIN director d ON m.director_id=d.director_id
+	</select>
+	<!-- 
+			영화(감독포함) 상세 정보를 조회하기 위한 resultmap 을 정의 
+			mybatis 의 resultmap 은 extends 를 통한 확장이 가능 
+			기존 resultmap을 확장해서 추가 할 속성만 새로 명시하면 된다 
+	 -->
+	 <resultMap type="org.kosta.myproject.model.vo.MovieVO" id="detailMovieRM" extends="movieListRM">
+	 	<result column="director_id" property="directorVO.directorId"/>
+	 	<result column="intro" property="directorVO.intro"/>
+	 </resultMap>
+	 <select id="findMovieDetailInfo" resultMap="detailMovieRM" parameterType="long">
+	 	SELECT m.movie_id,m.title,m.genre,m.attendance,d.director_id,d.director_name,intro
+		FROM movie m
+		INNER JOIN  director d ON m.director_id=d.director_id
+		WHERE movie_id=#{value}
+	 </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

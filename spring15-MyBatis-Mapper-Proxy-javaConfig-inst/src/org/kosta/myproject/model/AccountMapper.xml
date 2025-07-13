@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosta.myproject.model.AccountMapper">
+	<sql id="selectAccount">
+	select account_no,name,balance from spring_account
+	</sql>
+	<select id="findAccountByNo" resultType="org.kosta.myproject.model.AccountVO" parameterType="long">
+	<include refid="selectAccount"></include>
+	where account_no=#{value}
+	</select>
+	<select id="findAccountListOrderByNoDesc"  resultType="org.kosta.myproject.model.AccountVO">
+	<include refid="selectAccount"></include>
+	order by account_no desc
+	</select>
+</mapper>

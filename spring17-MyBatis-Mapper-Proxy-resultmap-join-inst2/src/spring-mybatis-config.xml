@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+<!-- dbcp -->
+<bean id="dbcp" class="org.apache.commons.dbcp2.BasicDataSource">
+<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+<property name="url" value="jdbc:oracle:thin:@13.124.215.95:1521:xe"/>
+<property name="username" value="scott"/>
+<property name="password" value="tiger"/>
+</bean>
+<!-- spring과 mybatis framework 연동설정
+	  SqlSessionFactoryBean : MyBatis 의 주요 객체인 SqlSession을 생성하는 Factory 역할을 하는 객체 
+	  dataSource : database connection pool 을 setting 	  
+ -->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="dbcp"/>
+<property name="configuration">
+	<bean class="org.apache.ibatis.session.Configuration">
+		<!-- 
+				db column name의 underscore와  application instance variable name의 camelcase를 자동으로 연결 
+				ex) 컬럼명: product_id   변수명: productId 이 자동 매핑 
+		-->
+		<property name="mapUnderscoreToCamelCase" value="true"/>
+	</bean>
+</property>
+</bean>
+<!-- 
+		SqlSessionTemplate : MyBatis 개발 생산성을 위해 사용하는 객체(bean or component)
+								 반복적인 작업을 Template에서 지원 ( openSession ~ close ) 
+								 AOP 기반 트랜잭션을 지원 ( 선언적 방식의 트랜잭션을 지원 ) -> 이후 공부예정
+								 영속성 계층 ( Persistence Layer ) 에서 DI 방식으로 사용할 bean  
+ -->
+<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+<constructor-arg ref="sqlSessionFactory"/>
+</bean>
+<!-- 
+		MyBatis Proxy를 위한 설정 ( DAO(Mapper) interface 를 implements 한 구현 객체 - DAOImpl)
+	  	DAOImpl 구현체를 Framework 차원으로 자동 생성 - @Mapper 어노테이션을 영속성 계층 인터페이스에 명시 
+	  	org.kosta.model 이하의 @Mapper 가 명시된 인터페이스를 검색해 구현체를 생성한다 
+ -->
+<mybatis-spring:scan base-package="org.kosta.myproject.model"/>
+
+<!--  Annotation 기반 IOC(DI,DL)을 위한 설정 -->
+<context:component-scan base-package="org.kosta.myproject"/>
+</beans>
+
+
+
+
+

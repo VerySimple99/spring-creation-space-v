@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- dbcp -->
+	<bean id="dbcp" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName"
+			value="oracle.jdbc.OracleDriver" />
+		<property name="url"
+			value="jdbc:oracle:thin:@13.124.215.95:1521:xe" />
+		<property name="username" value="scott" />
+		<property name="password" value="tiger" />
+	</bean>
+	<!-- spring과 mybatis framework 연동설정 -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dbcp" />
+		<property name="mapperLocations"
+			value="classpath:/mappers/*Mapper.xml" />
+		<!-- 
+		db 는 underscore로 합성어를 표현 (account_no) , java 는 camelcase로 합성어를 표현 	(accountNo) 
+		db의 underscore와 java의 camelcase를 자동 매핑하는 설정 
+			-->
+		<property name="configuration">
+			<bean class="org.apache.ibatis.session.Configuration">
+				<property name="mapUnderscoreToCamelCase" value="true" />
+			</bean>
+		</property>	
+	</bean>
+	<!-- SqlSessionTemplate : 반복적인 db 연동 작업( openSession() ~ commit() ~ close() 
+		)을 Template에서 지원 AOP 기반 트랜잭션 처리를 지원 영속성 계층 DAO에서 DI 방식으로 주입받아 사용할 Bean -->
+	<bean id="sqlSessionTemplate"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+	<context:component-scan
+		base-package="org.kosta.myproject" />
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+

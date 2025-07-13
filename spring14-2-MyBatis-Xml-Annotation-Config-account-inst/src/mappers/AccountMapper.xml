@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="account">
+<select id="getTotalAccountCount"  resultType="int">
+	SELECT count(*) FROM spring_account
+</select>
+<!--  여러 곳에서 재사용할 sql 을 정의 -->
+<sql id="selectAccount">
+	SELECT account_no,name,balance FROM spring_account
+</sql>
+<!-- 
+		컬럼명 : account_no  , 인스턴스변수명 : accountNo 로 비매칭 될 경우 
+		별칭(인스턴스변수명으로)을 이용하면 조회가 가능하다 
+		
+		spring-mybatis xml에서 mapUnderscoreToCamelCase 을 설정함으로써
+		별도의 별칭없이 db column 의 _   와 java 인스턴 변수의 camelCase 가 자동 매핑된다   
+ -->
+<select id="findAccountByNo"  parameterType="long"  resultType="org.kosta.myproject.model.AccountVO">
+ <include refid="selectAccount"></include>
+  WHERE account_no=#{value}
+</select>
+<select id="findAccountListOrderByNoDesc" resultType="org.kosta.myproject.model.AccountVO">
+<include refid="selectAccount"></include>
+ ORDER BY account_no DESC
+</select>
+<insert id="register"  parameterType="org.kosta.myproject.model.AccountVO">
+INSERT INTO spring_account(account_no,name,balance) 
+VALUES(spring_account_seq.nextval,#{name},#{balance})
+</insert>
+<select id="findAccountListGreaterThanMoneyOrderByBalanceDesc" parameterType="long" resultType="org.kosta.myproject.model.AccountVO">
+<include refid="selectAccount"></include>
+WHERE balance>#{value} ORDER BY balance DESC
+</select>
+<select id="findAccountListLessThanMoneyOrderByBalanceDesc" parameterType="long" resultType="org.kosta.myproject.model.AccountVO">
+<include refid="selectAccount"></include>
+<!--  CDATA Section : 해당 영역에 기술된 내용은 xml tag가 아니라 문자열 임을 알린다      -->
+<![CDATA[
+WHERE balance<#{value} ORDER BY balance DESC
+]]>
+</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

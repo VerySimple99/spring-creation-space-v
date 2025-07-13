@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosta.myproject.model.ProductMapper">
+	<select id="getTotalProductCount" resultType="int">
+		select count(*) from spring_product
+	</select>
+	<sql id="selectProduct">
+		SELECT product_no,name,maker,price FROM spring_product
+	</sql>
+	<select id="findAllProductList" resultType="org.kosta.myproject.model.ProductVO">
+		<include refid="selectProduct"></include>
+		ORDER BY product_no DESC
+	</select>
+	<select id="findProductListByMaker" parameterType="string" resultType="org.kosta.myproject.model.ProductVO">
+		<include refid="selectProduct"></include>
+		WHERE maker=#{value}
+		ORDER BY product_no DESC
+	</select>
+	<select id="findProductListByMakerAndPrice" parameterType="org.kosta.myproject.model.ProductVO" 
+	 resultType="org.kosta.myproject.model.ProductVO">
+	 <include refid="selectProduct"></include>	 
+	 <![CDATA[
+	 WHERE maker=#{maker} AND price<#{price}
+	 ]]></select>
+	 <select id="findProductListByLowPriceAndHighPrice" parameterType="hashmap"  
+	 resultType="org.kosta.myproject.model.ProductVO">
+	  <include refid="selectProduct"></include>	 
+	  <![CDATA[
+	 	WHERE maker=#{MAKER} AND price>#{LOWPRICE} AND price<#{HIGHPRICE}
+	 ]]>
+	 </select>
+	 <select id="findProductByNo"  parameterType="long" resultType="org.kosta.myproject.model.ProductVO">
+	 	<include refid="selectProduct"></include>
+	 	WHERE product_no=#{value}
+	 </select>
+	 <select id="findProductListLikeKeyword" parameterType="string" resultType="org.kosta.myproject.model.ProductVO">
+	 	<include refid="selectProduct"></include>
+	 	WHERE name LIKE '%' || #{value} || '%'
+	 </select>
+	 <insert id="register" parameterType="org.kosta.myproject.model.ProductVO">
+	 	INSERT INTO spring_product VALUES(spring_product_seq.nextval,#{name},#{maker},#{price})
+	 </insert>
+	  <insert id="registerVer2" parameterType="org.kosta.myproject.model.ProductVO">
+	 	INSERT INTO spring_product VALUES(spring_product_seq.nextval,#{name},#{maker},#{price})
+	 	<selectKey keyColumn="product_no" keyProperty="productNo" order="AFTER" resultType="long">
+	 		SELECT spring_product_seq.currval from dual
+	 	</selectKey>
+	 </insert>
+</mapper>
+
+
+
+
+
+
+
+
+
