@@ -1,5 +1,6 @@
 package org.kosa.spring08_1_bootstudy;
 
+import org.kosa.spring08_1_bootstudy.model.FoodService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -99,23 +100,37 @@ public class MyApplication {
      
   
      
-     
+Spring Boot App으로 실행할 경우, Spring Boot 1.3 버전부터는 
+JMX(Java Management Extensions) 빈을 통해 STS가 애플리케이션에게 
+"정중하게 종료해달라(graceful shutdown)"고 요청할 수 있습니다.
+
+이는 IDE에서 정지(Stop) 버튼을 클릭했을 때, 애플리케이션이 데이터베이스 연결을 깔끔하게 끊거나, 
+열려 있는 리소스를 정리하는 등 정상적인 종료 절차를 밟을 수 있도록 해줍니다.     
  
  */
 @SpringBootApplication
 public class Spring081BootstudyApplication implements CommandLineRunner {
+	private final FoodService foodService;
+	
 
+	public Spring081BootstudyApplication(FoodService foodService) {
+		super();
+		this.foodService = foodService;
+	}
 	public static void main(String[] args) {
 		 System.out.println("1. main 메서드 시작");
 		SpringApplication.run(Spring081BootstudyApplication.class, args);
 		System.out.println("3. main 메서드 종료");
+		
 	}
+	
     @Override
     public void run(String... args) throws Exception {
         System.out.println("2. CommandLineRunner 실행!");
         System.out.println("   - Spring 컨테이너 준비 완료");
         System.out.println("   - 모든 Bean 생성 완료");
         System.out.println("   - 이제 우리 코드 실행 차례!");
+        foodService.eat();
     }
 
 }

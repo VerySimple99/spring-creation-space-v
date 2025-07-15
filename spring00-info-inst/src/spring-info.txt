@@ -244,7 +244,7 @@ Spring Boot (원룸 풀옵션):
 입주하자마자 모든 것이 준비되어 있음
 필요한 설정들이 자동으로 완료
 바로 사용 가능!
-
+****************************************************************************
  ## **Spring Boot의 핵심 철학**
 
 ### **1. Convention over Configuration (관례 우선 설정)**
@@ -327,8 +327,77 @@ public class MyApplication {
 **실생활 비유**: 아파트 입주자 명단 작성
 - 각 호수를 돌아다니며 거주자 정보를 자동으로 수집     
      
+**************Spring Legacy 와 Spring Boot 의 Spring Container****************************************************************     
+🎯 핵심 요약: 연관성의 본질
+완전히 동일한 목적, 다른 방법
+java// Legacy: 수동 조립
+AnnotationConfigApplicationContext ctx = 
+    new AnnotationConfigApplicationContext(AppConfig.class);
+
+// Spring Boot: 자동 조립
+SpringApplication.run(MyApp.class, args);
+
+// 🔥 결과: 둘 다 Spring ApplicationContext 생성!
+진화의 3단계
+
+XML 시대: ClassPathXmlApplicationContext
+Annotation 시대: AnnotationConfigApplicationContext
+Spring Boot 시대: SpringApplication.run() (내부적으로 ApplicationContext 생성)
+
+교육적 연결점
+java// 🎓 학생들에게 이렇게 설명
+"Legacy에서 여러분이 직접 했던 일들을
+Spring Boot가 SpringApplication.run() 안에서 자동으로 해주는 것입니다!"
+
+// 직접 했던 일:
+// - ApplicationContext 생성
+// - 설정 클래스 등록  
+// - Bean 생성 및 주입
+// - 생명주기 관리
+
+// Spring Boot가 자동으로 하는 일:
+// - 위의 모든 것 + 자동 설정까지!     
      
+Spring Legacy vs Spring Boot: 애플리케이션 컨텍스트 생성 방식 비교
+🎯 핵심 연관성: 둘 다 Spring Container 생성하는 방법
+본질적으로 같은 일을 하는 두 가지 방법
+Spring Legacy 방식:
+java// 🔧 수동으로 Spring Container 생성
+AnnotationConfigApplicationContext ctx = 
+    new AnnotationConfigApplicationContext(AppConfig.class);
+
+// 컨테이너에서 Bean 가져오기
+MyService service = ctx.getBean(MyService.class);
+service.doSomething();
+
+// 사용 후 컨테이너 종료
+ctx.close();
+Spring Boot 방식:
+java// 🚀 자동으로 Spring Container 생성 + 관리
+@SpringBootApplication
+public class MyApp {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApp.class, args);
+        // 🔥 내부에서 ApplicationContext 생성하고 모든 것을 자동 관리!
+    }
+}     
      
+각 세대별 특징
+1세대 (XML):
+
+모든 Bean 정의를 XML에 명시
+컨텍스트 생성과 관리 모두 수동
+
+2세대 (Annotation):
+
+Java 기반 설정으로 타입 안정성 확보
+여전히 컨텍스트 생성/관리는 수동
+
+3세대 (Spring Boot):
+
+자동 설정으로 최소한의 코드
+컨텍스트 생성부터 관리까지 모두 자동     
+*****************************************************************************     
 **CommandLineRunner란?**     
 Spring Boot 애플리케이션가 완전히 준비되면
 CommandLineRunner)이 자동으로 작동하여
@@ -355,7 +424,141 @@ public class MyApplication implements CommandLineRunner {
         System.out.println("   - 이제 우리 코드 실행 차례!");
     }
 }
+***********ServletContextListener 와 CommandLineRunner******************
+실행 시점 비교
+ServletContextListener:
+웹 컨테이너 시작 → 웹 애플리케이션 로드 → contextInitialized() 실행 → 서비스 시작
+CommandLineRunner:
+JVM 시작 → Spring Boot 시작 → Spring Container 준비 → run() 실행 → 서비스 시작
+// 🎓 교육적 설명
+"ServletContextListener.contextInitialized()를 기억하시나요?
+웹 애플리케이션이 완전히 준비된 후에 실행되는 메서드였죠.
 
+CommandLineRunner.run()도 똑같은 개념입니다!
+Spring Boot 애플리케이션이 완전히 준비된 후에 실행되는 메서드예요.
+
+차이점은:
+- ServletContextListener: 웹 컨테이너 환경에서만
+- CommandLineRunner: 모든 Spring Boot 환경에서"
+
+핵심 공통점:
+
+✅ 초기화 완료 시점 실행
+✅ 애플리케이션 시작 로직 배치
+✅ 한 번만 실행되는 특성
+✅ 후크(Hook) 메서드 성격
+
+차이점:
+
+🔄 환경: Servlet Container vs Spring Boot
+🔄 복잡성: 수동 설정 vs 자동 설정
+🔄 범위: 웹 전용 vs 범용
+     
+     
+// 🔄 Servlet → Spring Boot 마이그레이션
+// Before (Servlet)
+// 🔍 두 방식의 실행 순서 비교
+
+    
+    // Servlet 방식
+    public class ServletInitializer implements ServletContextListener {
+        @Override
+        public void contextInitialized(ServletContextEvent sce) {
+            System.out.println("1️⃣ Servlet 컨텍스트 초기화 완료");
+            System.out.println("   - 웹 애플리케이션 준비됨");
+            System.out.println("   - 서블릿 등록 완료");
+        }
+    }
+    
+    // Spring Boot 방식
+    @SpringBootApplication
+    public class SpringBootInitializer implements CommandLineRunner {
+        @Override
+        public void run(String... args) throws Exception {
+            System.out.println("2️⃣ Spring Boot 애플리케이션 초기화 완료");
+            System.out.println("   - Spring Container 준비됨");
+            System.out.println("   - 모든 Bean 생성 완료");
+        }
+    }
+
+     
+     
+     
+  ***************************************************************
+  스프링 부트 로깅 기초
+1. 로깅이란 무엇인가?
+로깅은 애플리케이션의 실행 과정을 기록하는 것입니다. 마치 일기를 쓰듯이 프로그램이 무엇을 했는지 남겨두는 거예요.
+실생활 예시
+
+병원 차트: 환자의 상태 변화를 기록
+비행기 블랙박스: 비행 중 모든 상황을 기록
+애플리케이션 로그: 프로그램의 동작 과정을 기록
+
+IT 개발 현장에서는?
+
+문제 해결: 오류가 발생했을 때 원인 파악
+성능 모니터링: 시스템이 얼마나 빠르게 동작하는지 확인
+사용자 행동 분석: 어떤 기능을 많이 사용하는지 파악
+보안 감시: 비정상적인 접근 시도 감지
+
+2. System.out.println vs 로깅
+java// ❌ 좋지 않은 방법
+System.out.println("사용자가 로그인했습니다: " + username);
+
+// ✅ 좋은 방법
+logger.info("사용자가 로그인했습니다: {}", username);
+System.out.println의 문제점
+
+레벨 구분 불가 (중요한 것과 덜 중요한 것을 구분 못함)
+파일 저장 어려움
+성능에 좋지 않음
+운영 환경에서 끄기 어려움
+
+3. 로깅 레벨의 이해
+로깅 레벨은 중요도에 따른 분류입니다:
+ERROR > WARN > INFO > DEBUG > TRACE
+(높음)                        (낮음)
+
+ERROR: 심각한 오류 (시스템이 멈출 수 있는 상황)
+WARN: 경고 (문제가 될 수 있지만 동작은 계속)
+INFO: 일반 정보 (중요한 비즈니스 로직의 흐름)
+DEBUG: 디버깅 정보 (개발자가 문제를 찾을 때 필요)
+TRACE: 매우 상세한 정보 (모든 실행 과정)
+  
+핵심 포인트
+✅ 기억해야 할 것들
+
+Logger는 클래스마다 하나씩 생성하여 사용
+적절한 로깅 레벨 선택 (INFO는 운영환경, DEBUG는 개발환경)
+{}를 활용한 파라미터 바인딩 사용으로 성능 향상
+예외 발생 시 스택트레이스 함께 기록
+의미있는 메시지 작성으로 문제 해결 도움
+
+🚀 실무 팁
+
+로그인/로그아웃은 INFO 레벨
+데이터베이스 쿼리는 DEBUG 레벨
+예외 발생은 ERROR 레벨
+성능이 중요한 부분은 TRACE 레벨  
+
+
+내부 구성 
+스프링 부트의 로깅 구성
+기본 구조
+SLF4J (인터페이스) 
+    ↓
+Logback (구현체) ← 스프링 부트 기본값
+자동 포함되는 의존성
+스프링 부트 스타터에는 다음이 자동으로 포함됩니다:
+
+spring-boot-starter-logging
+slf4j-api (인터페이스)
+logback-classic (구현체)
+logback-core (핵심 라이브러리)
+  ***************************************************************   
+     
+     
+     
      
      
      
