@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.kosa</groupId>
-	<artifactId>spring12-AOP-AroudAdvice-boot</artifactId>
+	<artifactId>spring13-AOP-PerformanceCheck-boot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring12-AOP-AroudAdvice-boot</name>
+	<name>spring13-AOP-PerformanceCheck-boot</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
