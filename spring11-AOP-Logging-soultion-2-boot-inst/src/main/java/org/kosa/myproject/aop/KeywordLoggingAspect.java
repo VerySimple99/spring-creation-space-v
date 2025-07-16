@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class KeywordLoggingAspect {
 	private Logger logger=LoggerFactory.getLogger(getClass());
-	@After("execution(public * org.kosta.myproject.model.*Service.find*(..))")
+	@After("execution(public * org.kosa.myproject.model.*Service.find*(..))")
 	public void logging(JoinPoint point) {
 		String className=point.getTarget().getClass().getName();
 		String methodName=point.getSignature().getName();

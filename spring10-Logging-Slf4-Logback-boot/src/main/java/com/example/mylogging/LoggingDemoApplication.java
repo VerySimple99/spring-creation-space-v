@@ -8,7 +8,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class LoggingDemoApplication implements CommandLineRunner {
-    
+    /*
+     * 메모리 효율성: 클래스당 하나의 Logger만 생성
+		성능: 인스턴스 생성시마다 Logger를 만들지 않음
+		관례: 거의 모든 Java 프로젝트에서 사용하는 표준 패턴
+		단순함: DI 설정이나 주입 과정이 불필요
+		
+		DI 하지 않음 
+		불필요한 복잡성: Logger는 단순한 도구인데 DI 설정이 과함
+        성능 오버헤드: Spring Container가 관리할 필요 없음
+        
+        비즈니스 로직 의존성 → DI 사용 (Repository, Service 등)
+        기술적 도구 → static final 사용 (Logger, Utility 등)
+     */
     // Logger 생성 - SLF4J 인터페이스 사용
     private static final Logger logger = LoggerFactory.getLogger(LoggingDemoApplication.class);
     
