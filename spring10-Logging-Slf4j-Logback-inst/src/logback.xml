@@ -38,7 +38,7 @@
     </appender>
   <!--  특정 패키지 이하 로깅 레별을 별도로 설정 가능  -->
     <logger name="org.springframework" level="warn"/>
-    <logger name="org.kosta.myproject" level="trace"/>
+    <logger name="org.kosa.myproject" level="debug"/>
     <root level="info">
       <!--   <appender-ref ref="CONSOLE"/> -->
         <appender-ref ref="FILE"/>

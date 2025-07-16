@@ -48,6 +48,9 @@ public class LoggingDemoApplication implements CommandLineRunner {
         String userRole = "강사";
         
         // {} 를 사용한 파라미터 바인딩 - 성능상 유리
+        /*
+         {}를 사용하는 것은 로그가 실제로 출력될 때만 비용을 지불하는 지연 평가(Lazy Evaluation) 방식이며, 이 과정에서 StringBuilder와 같은 효율적인 방법을 통해 문자열을 결합합니다. 따라서 성능상 훨씬 유리
+         */
         logger.info("사용자 로그인 시도: {}", username);
         
         // 비즈니스 로직 실행
