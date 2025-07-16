@@ -1,20 +1,10 @@
-package org.kosa.myproject;
+package org.kosa.myproject.test;
 
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.StopWatch;
 
-@SpringBootTest
-class Spring13AopPerformanceCheckBootApplicationTests {
-
-	@Test
-	void contextLoads() {
-	   findAllList();
-	}
-	
-	
+public class DemoStopWatchService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public String findAllList() {
@@ -39,3 +29,8 @@ class Spring13AopPerformanceCheckBootApplicationTests {
 	}
 
 }
+
+
+
+
+
