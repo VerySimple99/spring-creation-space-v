@@ -45,7 +45,7 @@
 	 	<selectKey keyColumn="product_no" keyProperty="productNo" order="AFTER" resultType="long">
 	 		SELECT spring_product_seq.currval from dual
 	 	</selectKey>
-	 </insert>
+	 </insert>	 
 </mapper>
 
 

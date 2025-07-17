@@ -619,6 +619,62 @@ logback-core (핵심 라이브러리)
    DAO ( Data Access Object ) 를 효율적으로 개발 
    데이터베이스 연동 자바 프로그램을 효율적으로 개발하고 운영할 수 있게 지원한다          
            
+           ## MyBatis 핵심 구조
+
+### **2.1 전체 아키텍처**
+ ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Java Code     │    │   XML Mapper    │    │   Database      │
+│                 │    │                 │    │                 │
+│ UserMapper.java │◄──►│ UserMapper.xml  │◄──►│ MySQL/Oracle    │
+│                 │    │                 │    │                 │
+│ - selectUser()  │    │ - <select>      │    │ - SELECT query  │
+│ - insertUser()  │    │ - <insert>      │    │ - INSERT query  │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+          
+           
+   핵심 컴포넌트        
+ A. Mapper Interface (Java)  
+ // MyBatis의 핵심: 인터페이스만 정의, 구현체는 MyBatis가 자동 생성
+@Mapper
+public interface UserMapper {
+    User selectUser(Long id);        // 메서드명 = XML의 id
+    int insertUser(User user);       // 반환타입 = 영향받은 행 수
+    List<User> selectAllUsers();     // 컬렉션 반환 가능
+}
+          
+B. XML Mapper (SQL 정의)           
+<!-- namespace = Mapper Interface의 완전한 클래스명 -->
+<mapper namespace="com.example.mapper.UserMapper">
+    <!-- id = 인터페이스의 메서드명과 일치 -->
+    <select id="selectUser" parameterType="long" resultType="User">
+        SELECT * FROM users WHERE id = #{id}
+    </select>
+</mapper>
+           
+## 3. 파라미터 매핑 (`#{}` vs `${}`)
+### **3.1 `#{}` - PreparedStatement (권장)**           
+ <!-- 안전한 매핑: SQL Injection 방지 -->
+<select id="selectUser" resultType="User">
+    SELECT * FROM users WHERE id = #{id}
+    <!-- 실제 실행: SELECT * FROM users WHERE id = ? -->
+</select>
+3.2 ${} - Statement (주의 필요)
+<!-- 직접 문자열 치환: 위험할 수 있음 -->
+<select id="selectUsersByColumn" resultType="User">
+    SELECT * FROM users ORDER BY ${columnName}
+    <!-- 실제 실행: SELECT * FROM users ORDER BY name -->
+</select>
+동적 테이블명, 컬럼명
+     
+3.3 복합 파라미터 처리          
+// @Param 어노테이션으로 명확한 파라미터 명시
+List<User> selectUsersByAgeRange(@Param("minAge") int minAge,
+                                @Param("maxAge") int maxAge);
+ <select id="selectUsersByAgeRange" resultType="User">
+    SELECT * FROM users
+    WHERE age BETWEEN #{minAge} AND #{maxAge}
+</select>
+          
            
  **Spring MVC**
 

@@ -27,11 +27,11 @@ public interface MemberMapper {
      * 새로운 회원을 등록하는 메서드
      * XML: <insert id="register" parameterType="org.kosta.myproject.model.MemberVO">
      */
-    void register(Member member);
+    int register(Member member);
     
     /**
      * 특정 ID의 회원을 삭제하는 메서드
      * XML: <delete id="deleteMember" parameterType="string">
      */
-    void deleteMember(String id);
+    int deleteMember(String id);
 }
