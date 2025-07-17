@@ -4,13 +4,13 @@
 <select id="getTotalMemberCount" resultType="int">
 SELECT COUNT(*) FROM spring_member
 </select>
-<select id="findMemberList"  resultType="Member">
+<select id="findMemberList"  resultType="org.kosa.myproject.domain.Member">
 SELECT id,password,name,address FROM spring_member
 </select>
-<insert id="register" parameterType="Member">
+<insert id="register" parameterType="org.kosa.myproject.domain.Member">
 INSERT INTO spring_member(id,password,name,address) VALUES(#{id},#{password},#{name},#{address})
 </insert>
 <delete id="deleteMember" parameterType="string">
-DELETE 
-</delete>
+ delete from spring_member where id = #{value}
+</delete>  
 </mapper>
