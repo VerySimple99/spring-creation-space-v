@@ -61,4 +61,25 @@ public interface ProductMapper {
   */
  List<Product> findByPriceRange(@Param("minPrice") BigDecimal minPrice,
                                  @Param("maxPrice") BigDecimal maxPrice);
+ 
+ /**
+  * 동적 조건으로 상품 검색
+  * @param product 검색 조건을 담은 객체 (productName, manufacturer, minPrice, maxPrice)
+  * @return 검색 조건에 맞는 상품 목록
+  */
+ List<Product> findProductsDynamic(Product product);
+
+ /**
+  * 동적 필드로 상품 정보 수정
+  * @param product 수정할 상품 정보 (id는 필수, 나머지는 선택적)
+  * @return 처리된 행의 수
+  */
+ int updateDynamic(Product product);
+
+ /**
+  * 여러 ID를 이용해 상품 삭제
+  * @param productIds 삭제할 상품 ID 목록
+  * @return 처리된 행의 수
+  */
+ int deleteByIds(List<Long> productIds);
 }

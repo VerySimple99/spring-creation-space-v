@@ -49,8 +49,8 @@ public class Product {
     
     // Getter & Setter 메서드들
     // MyBatis가 결과를 매핑할 때 이 메서드들을 사용합니다
-    
-    public Long getProductId() {
+
+	public Long getProductId() {
         return productId;
     }
     

@@ -52,4 +52,51 @@
         WHERE price BETWEEN #{minPrice} AND #{maxPrice}
         ORDER BY price ASC
     </select>
+    <select id="findProductsDynamic" resultType="org.kosa.myproject.domain.Product">
+        SELECT <include refid="productColumns"/>
+        FROM spring_product
+        <where>
+            <if test="productName != null and productName != ''">
+                AND product_name LIKE CONCAT('%', #{productName}, '%')
+            </if>
+            <if test="manufacturer != null and manufacturer != ''">
+                AND manufacturer = #{manufacturer}
+            </if>
+            <if test="minPrice != null and maxPrice != null">
+                AND price BETWEEN #{minPrice} AND #{maxPrice}
+            </if>
+            <if test="minPrice != null and maxPrice == null">
+                AND price >= #{minPrice}
+            </if>
+            <if test="minPrice == null and maxPrice != null">               
+            <![CDATA[
+             AND price <= #{maxPrice}
+            ]]></if>
+        </where>
+        ORDER BY created_at DESC
+    </select>
+
+    <update id="updateDynamic">
+        UPDATE spring_product
+        <set>
+            <if test="productName != null and productName != ''">
+                product_name = #{productName},
+            </if>
+            <if test="manufacturer != null and manufacturer != ''">
+                manufacturer = #{manufacturer},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+        </set>
+        WHERE product_id = #{productId}
+    </update>
+
+    <delete id="deleteByIds">
+        DELETE FROM spring_product
+        WHERE product_id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
