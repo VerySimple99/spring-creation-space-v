@@ -1,0 +1,7 @@
+📁 src/main/java/com/example/demo/
+├── 🏛️ domain/Product.java         # 비즈니스 도메인 모델
+├── 🗂️ mapper/ProductMapper.java   # 데이터 접근 계층  
+├── 🎯 service/ProductService.java # 비즈니스 로직 계층
+├── 🚀 runner/CommandLineRunner.java # 데모 실행
+└── 📦 MybatisDemoApplication.java # 애플리케이션 진입점
+

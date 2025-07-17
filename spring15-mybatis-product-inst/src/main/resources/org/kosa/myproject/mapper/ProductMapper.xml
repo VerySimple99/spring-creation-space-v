@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.kosa.myproject.mapper.ProductMapper">
+
+    <sql id="productColumns">
+        product_id, product_name, manufacturer, price, created_at
+    </sql>
+
+    <select id="findAll" resultType="org.kosa.myproject.domain.Product">
+        SELECT <include refid="productColumns"/>
+        FROM spring_product
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findById" resultType="org.kosa.myproject.domain.Product">
+        SELECT <include refid="productColumns"/>
+        FROM spring_product
+        WHERE product_id = #{productId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="productId">
+        INSERT INTO spring_product (product_name, manufacturer, price)
+        VALUES (#{productName}, #{manufacturer}, #{price})
+    </insert>
+
+    <update id="update">
+        UPDATE spring_product
+        SET
+            product_name = #{productName},
+            manufacturer = #{manufacturer},
+            price = #{price}
+        WHERE product_id = #{productId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM spring_product
+        WHERE product_id = #{productId}
+    </delete>
+
+    <select id="findByManufacturer" resultType="org.kosa.myproject.domain.Product">
+        SELECT <include refid="productColumns"/>
+        FROM spring_product
+        WHERE manufacturer = #{manufacturer}
+        ORDER BY price ASC
+    </select>
+
+    <select id="findByPriceRange" resultType="org.kosa.myproject.domain.Product">
+        SELECT <include refid="productColumns"/>
+        FROM spring_product
+        WHERE price BETWEEN #{minPrice} AND #{maxPrice}
+        ORDER BY price ASC
+    </select>
+</mapper>
