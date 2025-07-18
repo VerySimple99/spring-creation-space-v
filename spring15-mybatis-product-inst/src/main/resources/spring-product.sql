@@ -42,4 +42,4 @@ INSERT INTO spring_product (product_name, manufacturer, price) VALUES
 
 COMMIT
 
-
+SELECT * FROM spring_product;

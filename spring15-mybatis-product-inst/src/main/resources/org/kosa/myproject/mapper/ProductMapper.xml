@@ -52,16 +52,28 @@
         WHERE price BETWEEN #{minPrice} AND #{maxPrice}
         ORDER BY price ASC
     </select>
+    <!--  
+            MyBatis Dynamic SQL 
+            
+             parameterType 생략 가능한 경우 (99%)
+             타입을 추론함 
+			단일 파라미터: findById(Long id) → MyBatis가 자동 인식
+			Map 파라미터: 항상 자동 인식됨
+			@Param 사용: 애노테이션으로 이미 명시됨
+			일반 객체: Product, DTO 등은 자동 인식
+			
+			만약 컬렉션을 쓴다면 타입 명시 (안전성을 위해) 
+      -->
     <select id="findProductsDynamic" resultType="org.kosa.myproject.domain.Product">
         SELECT <include refid="productColumns"/>
         FROM spring_product
         <where>
-            <if test="productName != null and productName != ''">
-                AND product_name LIKE CONCAT('%', #{productName}, '%')
-            </if>
-            <if test="manufacturer != null and manufacturer != ''">
+          <if test="manufacturer != null and manufacturer != ''">
                 AND manufacturer = #{manufacturer}
             </if>
+            <if test="productName != null and productName != ''">
+                AND product_name LIKE CONCAT('%', #{productName}, '%')
+            </if>           
             <if test="minPrice != null and maxPrice != null">
                 AND price BETWEEN #{minPrice} AND #{maxPrice}
             </if>
