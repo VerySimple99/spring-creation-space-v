@@ -50,14 +50,24 @@ FROM movie m
 INNER JOIN  director d ON m.director_id=d.director_id
 WHERE movie_id=1
 
-
-
-
-
-
-
-
-
+<!-- 
+감독별 통계 정보 조회 (영화가 있는 감독만)
+- INNER JOIN: 영화가 있는 감독만 조회 (더 직관적)
+- GROUP BY: 감독별로 데이터를 묶어서 집계
+- 집계함수: SUM(합계), AVG(평균) 사용
+- COALESCE 불필요: INNER JOIN으로 NULL 값 자동 제거
+-->
+<select id="findDirectorStatistics" resultType="map">
+    SELECT 
+        d.director_id as directorId,
+        d.director_name as directorName,
+        SUM(m.attendance) as totalAttendance,
+        ROUND(AVG(m.attendance), 0) as averageAttendance
+    FROM director d
+    INNER JOIN movie m ON d.director_id = m.director_id
+    GROUP BY d.director_id, d.director_name
+    ORDER BY totalAttendance DESC
+</select>
 
 
 

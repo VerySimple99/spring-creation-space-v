@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 
+MyBatis XML Mapper 파일
+- namespace: 연결할 Mapper 인터페이스의 풀패키지명
+- 각 SQL의 id는 인터페이스의 메서드명과 정확히 일치해야 함
+-->
+<mapper namespace="org.kosa.myproject.mapper.DirectorMapper">
+
+    <!-- ============================================= -->
+    <!-- ResultMap 정의: 컬럼명과 객체 필드명 매핑 설정 -->
+    <!-- ============================================= -->
+    <!-- ============================================= -->
+    <!-- SELECT 쿼리들 -->
+    <!-- ============================================= -->
+
+    <!-- 
+    모든 감독 목록 조회
+    - resultMap 사용: 명시적 매핑으로 안정성 확보
+    - ORDER BY: 감독명 순으로 정렬하여 UI에서 찾기 쉽게 함
+    -->
+    <select id="findAll" resultType="org.kosa.myproject.domain.Director">
+        SELECT 
+            director_id,
+            director_name,
+            intro,
+            created_at
+        FROM director
+        ORDER BY director_name ASC
+    </select>
+
+    <!-- 
+    ID로 특정 감독 조회
+    - 파라미터: #{directorId}로 바인딩
+    - resultType vs resultMap: 여기서는 resultMap 사용으로 일관성 유지
+    -->
+    <select id="findById" resultType="org.kosa.myproject.domain.Director">
+        SELECT 
+            director_id,
+            director_name,
+            intro,
+            created_at
+        FROM director
+        WHERE director_id = #{directorId}
+    </select>
+   <!-- ============================================= -->
+    <!-- INSERT 쿼리 -->
+    <!-- ============================================= -->
+
+    <!-- 
+    새로운 감독 등록
+    - useGeneratedKeys="true": Auto Increment된 키 값을 받아옴
+    - keyProperty="directorId": 생성된 키를 Director 객체의 directorId에 설정
+    - 이렇게 하면 insert 후 Director 객체에 생성된 ID가 자동으로 설정됨
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="directorId">
+        INSERT INTO director (
+            director_name,
+            intro
+        ) VALUES (
+            #{directorName},
+            #{intro}
+        )
+    </insert>
+
+    <!-- ============================================= -->
+    <!-- UPDATE 쿼리 -->
+    <!-- ============================================= -->
+
+    <!-- 
+    감독 정보 수정
+    - WHERE 조건: 반드시 특정 감독만 수정되도록 director_id 조건 포함
+    - 모든 필드 업데이트: 실무에서는 부분 업데이트도 고려 가능
+    -->
+    <update id="update">
+        UPDATE director 
+        SET 
+            director_name = #{directorName},
+            intro = #{intro}
+        WHERE director_id = #{directorId}
+    </update>
+
+    <!-- ============================================= -->
+    <!-- DELETE 쿼리 -->
+    <!-- ============================================= -->
+
+    <!-- 
+    감독 삭제
+    - 외래키 제약조건: 영화가 있는 감독 삭제시 에러 발생 (비즈니스 룰)
+    - MySQL에서는 ON DELETE CASCADE 설정에 따라 동작이 달라짐
+    - 현재 스키마: CASCADE 설정으로 영화도 함께 삭제됨 (주의 필요)
+    -->
+    <delete id="deleteById">
+        DELETE FROM director 
+        WHERE director_id = #{directorId}
+    </delete>
+
+<!-- 
+감독별 통계 정보 조회 (영화가 있는 감독만)
+- INNER JOIN: 영화가 있는 감독만 조회 (더 직관적)
+- GROUP BY: 감독별로 데이터를 묶어서 집계
+- 집계함수: SUM(합계), AVG(평균) 사용
+- COALESCE 불필요: INNER JOIN으로 NULL 값 자동 제거
+-->
+<select id="findDirectorStatistics" resultType="map">
+    SELECT 
+        d.director_id as directorId,
+        d.director_name as directorName,
+        SUM(m.attendance) as totalAttendance,
+        ROUND(AVG(m.attendance), 0) as averageAttendance
+    FROM director d
+    INNER JOIN movie m ON d.director_id = m.director_id
+    GROUP BY d.director_id, d.director_name
+    ORDER BY totalAttendance DESC
+</select> 
+</mapper>
+
+<!-- 
+============================================= 
+학습 포인트 및 실무 팁
+============================================= 
+
+1. **namespace 주의사항**
+   - 반드시 Mapper 인터페이스의 풀패키지명과 정확히 일치
+   - 대소문자까지 정확해야 함
+
+2. **SQL ID 규칙**
+   - XML의 각 SQL id는 인터페이스 메서드명과 정확히 일치
+   - 카멜케이스 그대로 사용 (findAll, findById 등)
+
+3. **파라미터 바인딩**
+   - #{파라미터명}: PreparedStatement 사용 (SQL Injection 방지)
+   - ${파라미터명}: Statement 사용 (동적 테이블명 등 특수한 경우만)
+
+4. **resultType vs resultMap**
+   - resultType: 간단한 매핑 (기본타입, Map 등)
+   - resultMap: 복잡한 매핑 (객체, 중첩 객체 등)
+
+5. **Auto Increment 처리**
+   - useGeneratedKeys="true" + keyProperty 조합
+   - INSERT 후 생성된 키 값을 자동으로 객체에 설정
+
+6. **NULL 처리**
+   - COALESCE(): MySQL에서 NULL 값을 기본값으로 처리
+   - CASE WHEN: 조건부 값 설정
+
+7. **성능 고려사항**
+   - 적절한 인덱스 활용 (director_id, director_name)
+   - LEFT JOIN vs INNER JOIN 선택
+   - 필요한 컬럼만 SELECT (SELECT * 지양)
+
+8. **파일 위치**
+   - src/main/resources/mapper/DirectorMapper.xml
+   - 또는 application.properties에서 경로 설정
+   - mybatis.mapper-locations=classpath:mapper/*.xml
+-->
