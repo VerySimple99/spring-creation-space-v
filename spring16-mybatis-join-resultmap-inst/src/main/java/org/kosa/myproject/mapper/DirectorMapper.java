@@ -72,5 +72,5 @@ public interface DirectorMapper {
      * - 주의: 이 메서드는 JOIN이 필요하므로 복잡한 쿼리
      * @return 감독별 통계 정보가 담긴 Map 또는 DTO 목록
      */
-    List<Map<String,String>> findDirectorStatistics();  // 필요시 추가
+    List<Map<String,Object>> findDirectorStatistics();  // 필요시 추가
 }

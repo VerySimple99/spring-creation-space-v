@@ -147,3 +147,20 @@ FROM movie m
 INNER JOIN director d ON m.director_id = d.director_id
 WHERE m.title LIKE '%기생%'   -- '기생'이 포함된 영화
    OR m.title LIKE '%도둑%';  -- '도둑'이 포함된 영화
+   
+   
+         SELECT 
+            -- Movie 테이블의 모든 필요 컬럼
+            m.movie_id,
+            m.title,
+            m.genre,
+            m.attendance,
+            -- Director 테이블의 모든 필요 컬럼
+            d.director_id,
+            d.director_name,
+            d.intro
+        FROM movie m
+        INNER JOIN director d ON m.director_id = d.director_id
+        ORDER BY m.movie_id ASC  
+   
+   

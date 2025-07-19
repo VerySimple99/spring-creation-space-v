@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 
+MovieMapper XML - JOIN 쿼리와 중첩 객체 매핑의 핵심 예제
+- namespace: MovieMapper 인터페이스와 연결
+- ResultMap: Movie 객체 안에 Director 객체를 포함하는 복잡한 매핑
+- JOIN 쿼리: 영화와 감독 정보를 한 번에 조회
+-->
+<mapper namespace="org.kosa.myproject.mapper.MovieMapper">
+
+    <!-- ============================================= -->
+    <!-- ResultMap 정의: 중첩 객체 매핑의 핵심! -->
+    <!-- ============================================= -->
+    
+    <!-- 
+    MovieWithDirector ResultMap
+    - 핵심 개념: Association Mapping (연관관계 매핑)
+    - Movie 객체 안에 Director 객체를 포함하는 복잡한 구조
+    - JOIN 쿼리 결과를 중첩된 객체로 자동 변환
+    -->
+    <resultMap id="movieWithDirectorResultMap" type="org.kosa.myproject.domain.Movie">
+        <!-- Movie 객체의 기본 필드들 -->
+        <id property="movieId" column="movie_id" />
+        <result property="title" column="title" />
+        <result property="genre" column="genre" />
+        <result property="attendance" column="attendance" />
+        
+        <!-- 
+        Association: Movie 객체 내부의 Director 객체 매핑
+        - property="director": Movie 클래스의 director 필드
+        - javaType: Director.class (명시적 타입 지정)
+        - 중첩된 Director 객체의 각 필드를 컬럼과 매핑
+        -->
+        <association property="director" javaType="org.kosa.myproject.domain.Director">
+            <id property="directorId" column="director_id" />
+            <result property="directorName" column="director_name" />
+            <result property="intro" column="intro" />
+        </association>
+    </resultMap>
+
+    <!-- ============================================= -->
+    <!-- SELECT 쿼리들 - JOIN을 통한 데이터 조회 -->
+    <!-- ============================================= -->
+
+    <!-- 
+    전체 영화 수 조회 (단순 집계)
+    - 페이징 처리에서 사용
+    - JOIN 불필요: 영화 테이블의 행 수만 계산
+    - resultType="long": 기본 타입 직접 반환
+    -->
+    <select id="count" resultType="long">
+        SELECT COUNT(*) 
+        FROM movie
+    </select>
+
+    <!-- 
+    특정 영화 조회 (감독 정보 포함)
+    - INNER JOIN: 영화와 감독 정보를 함께 조회
+    - resultMap 사용: 복잡한 중첩 객체 매핑
+    - WHERE 조건: 특정 영화 ID로 필터링
+    -->
+    <select id="findById" resultMap="movieWithDirectorResultMap">
+        SELECT 
+            -- Movie 테이블 컬럼들
+            m.movie_id,
+            m.title,
+            m.genre,
+            m.attendance,
+            -- Director 테이블 컬럼들 (JOIN으로 가져옴)
+            d.director_id,
+            d.director_name,
+            d.intro
+        FROM movie m
+        INNER JOIN director d ON m.director_id = d.director_id
+        WHERE m.movie_id = #{movieId}
+    </select>
+
+    <!-- 
+    모든 영화 목록 조회 (감독 정보 포함)
+    - INNER JOIN: 모든 영화와 해당 감독 정보를 함께 조회
+    - resultMap 사용: List<Movie> 형태로 반환 (각 Movie는 Director 포함)
+    - ORDER BY: 영화 ID 순으로 정렬하여 일관된 순서 보장
+    -->
+    <select id="findAll" resultMap="movieWithDirectorResultMap">
+        SELECT 
+            -- Movie 테이블의 모든 필요 컬럼
+            m.movie_id,
+            m.title,
+            m.genre,
+            m.attendance,
+            -- Director 테이블의 모든 필요 컬럼
+            d.director_id,
+            d.director_name,
+            d.intro
+        FROM movie m
+        INNER JOIN director d ON m.director_id = d.director_id
+        ORDER BY m.movie_id ASC
+    </select>
+
+</mapper>
+
+<!-- 
+============================================= 
+핵심 학습 포인트 및 실무 가이드
+============================================= 
+
+1. **ResultMap vs ResultType**
+   - resultType: 단순 매핑 (기본 타입, 단일 객체)
+   - resultMap: 복잡한 매핑 (중첩 객체, 컬렉션)
+   
+2. **Association 매핑의 이해**
+   - Has-A 관계: Movie has a Director
+   - property: Java 객체의 필드명
+   - javaType: 해당 필드의 타입 (명시적 지정)
+   - 중첩된 객체의 각 필드를 별도로 매핑
+
+3. **JOIN 쿼리 작성 요령**
+   - 테이블 별칭 사용: m(movie), d(director)
+   - 명확한 컬럼 지정: m.movie_id, d.director_name
+   - 적절한 JOIN 타입 선택: INNER vs LEFT vs RIGHT
+
+4. **컬럼명 규칙**
+   - 동일한 컬럼명 충돌 방지: movie_id vs director_id
+   - 카멜케이스 자동 변환: director_name → directorName
+   - 명시적 매핑으로 더 안전한 처리
+
+5. **성능 고려사항**
+   - 필요한 컬럼만 SELECT: SELECT * 지양
+   - 적절한 인덱스 활용: FK 컬럼에 인덱스 필수
+   - JOIN 조건 명확히: ON 절에 정확한 조건 명시
+
+6. **실무 활용 패턴**
+   - 목록 화면: findAll() - 간단한 정보만
+   - 상세 화면: findById() - 완전한 정보
+   - 통계/집계: count() - 성능 중심
+
+7. **디버깅 팁**
+   - MyBatis 로그 활성화로 실제 SQL 확인
+   - ResultMap ID와 메서드명 매칭 확인
+   - 컬럼명과 프로퍼티명 대소문자 주의
+
+8. **확장 가능성**
+   - Collection 매핑: 1:N 관계 (감독의 영화 목록)
+   - 중첩된 ResultMap: 더 복잡한 객체 구조
+   - 동적 쿼리: <if>, <choose> 등 활용
+-->
