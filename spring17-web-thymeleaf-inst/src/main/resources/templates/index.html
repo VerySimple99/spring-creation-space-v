@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Thymeleaf 표현식으로 동적 제목 설정 -->
+    <title th:text="${pageTitle}">기본 제목</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .highlight { color: #2563eb; font-weight: bold; }
+        .info-box { background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Natural Template: 서버 없이 열면 "기본 환영 메시지"가 보임 -->
+        <!-- 서버에서 실행되면 ${message} 값으로 교체됨 -->
+        <h1 th:text="${message}">기본 환영 메시지</h1>
+        
+        <div class="info-box">
+            <p>현재 시간: <span th:text="${currentTime}" class="highlight">2025-01-01 00:00:00</span></p>
+            <p>접속자: <span th:text="${userName}" class="highlight">사용자</span>님</p>
+        </div>
+        
+        <!-- 링크 생성 (Spring MVC URL 도우미 사용) -->
+        <p><a th:href="@{/profile}">프로필 페이지로 이동</a></p>
+        
+        <!-- 조건부 렌더링 예제 -->
+        <div th:if="${userName != null}">
+            <p th:text="'환영합니다, ' + ${userName} + '님!'">환영합니다!</p>
+        </div>
+    </div>
+</body>
+</html>
