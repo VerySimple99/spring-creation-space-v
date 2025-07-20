@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!-- 
+=== 타임리프 객체 데이터 처리 학습 예제 ===
+이 예제는 서버에서 전달받은 객체(Member)를 화면에 표시하는 방법을 보여줍니다.
+실무에서 가장 자주 사용되는 패턴 중 하나입니다.
+-->
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 조회 결과</title>
+</head>
+<body>
+    <h1>회원 정보 조회 결과</h1>
+    
+    <!-- 
+    === 현재 코드의 문제점과 개선 방향 ===
+    현재: <p th:text="${member}">회원 정보가 여기에 표시됩니다.</p>
+    
+    문제점:
+    1. 객체 전체를 문자열로 출력 (예: com.example.Member@a1b2c3d4)
+    2. 사용자가 읽기 어려운 형태
+    3. 객체의 toString() 메서드에 의존
+    
+    실무에서는 객체의 개별 속성에 접근하여 사용자 친화적으로 표시합니다.
+    -->
+    
+    <!-- 현재 코드 - 학습용 -->
+    <div style="border: 2px solid #ff6b6b; padding: 10px; margin: 10px 0;">
+        <h3 style="color: #ff6b6b;">현재 코드 (개선 필요)</h3>
+        <p th:text="${member}">회원 정보가 여기에 표시됩니다.</p>
+        <!-- 
+        결과 예시: "Member{id=1, name='홍길동', email='hong@example.com'}"
+        또는 "com.example.Member@a1b2c3d4" (toString() 미구현 시)
+        -->
+    </div>
+    
+    <!-- 
+    === 개선된 코드 - 실무 스타일 ===
+    객체의 개별 속성에 접근하여 사용자 친화적으로 표시
+    -->
+    <div style="border: 2px solid #4ecdc4; padding: 10px; margin: 10px 0;">
+        <h3 style="color: #4ecdc4;">개선된 코드 (실무 스타일)</h3>
+        
+        <!-- 
+        === 타임리프 객체 속성 접근 문법 ===
+        ${객체.속성}: 객체의 속성에 직접 접근
+        
+        내부 동작:
+        1. 타임리프가 ${member.id}를 만나면
+        2. member 객체의 getId() 메서드를 자동 호출
+        3. 반환값을 HTML에 출력
+        
+        주의사항:
+        - 속성명은 Java Bean 규약을 따름 (getName(), getEmail() 등)
+        - null 안전성: 객체가 null이면 빈 문자열 출력
+        -->
+        
+        <!-- th:if를 사용한 null 체크 -->
+        <div th:if="${member != null}">
+            <!-- 
+            === 조건부 렌더링 ===
+            th:if="${조건}": 조건이 참일 때만 해당 요소를 렌더링
+            member 객체가 존재할 때만 회원 정보를 표시
+            -->
+            
+            <h4>회원 상세 정보</h4>
+            <ul>
+                <!-- 각 속성별로 안전하게 접근 -->
+                <li><strong>회원 ID:</strong> <span th:text="${member.id}">1</span></li>
+                <li><strong>이름:</strong> <span th:text="${member.name}">홍길동</span></li>
+              
+            </ul>
+            
+            <!-- 
+            === 안전한 탐색 연산자 (Safe Navigation) ===
+            ${member?.name}: member가 null이 아닐 때만 name에 접근
+            NullPointerException 방지
+            -->
+            <p><strong>안전한 접근:</strong> <span th:text="${member?.name}">이름 없음</span></p>
+        </div>
+        
+        <!-- member가 null인 경우 처리 -->
+        <div th:unless="${member != null}">
+            <!-- 
+            === th:unless 사용법 ===
+            th:unless="${조건}": 조건이 거짓일 때만 렌더링
+            th:if의 반대 개념
+            -->
+            <p style="color: #ff6b6b;">조회된 회원 정보가 없습니다.</p>
+        </div>
+    </div>
+    
+    <!-- 
+    === 추가 학습: 객체 바인딩 (th:object) ===
+    반복되는 객체 참조를 간소화하는 방법
+    -->
+    <div style="border: 2px solid #45b7d1; padding: 10px; margin: 10px 0;">
+        <h3 style="color: #45b7d1;">고급 기법: 객체 바인딩</h3>
+        
+        <!-- 
+        th:object="${member}": 현재 컨텍스트를 member 객체로 설정
+        이후 *{속성} 형태로 간단하게 접근 가능
+        -->
+        <div th:object="${member}" th:if="${member != null}">
+            <h4>객체 바인딩을 사용한 표시</h4>
+            <ul>
+                <!-- 
+                *{id}, *{name}, *{email}: 선택된 객체(member)의 속성에 접근
+                ${member.id}와 동일하지만 더 간결함
+                -->
+                <li><strong>회원 ID:</strong> <span th:text="*{id}">1</span></li>
+                <li><strong>이름:</strong> <span th:text="*{name}">홍길동</span></li>
+    
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 
+    === 실무 팁 ===
+    
+    1. Controller에서 데이터 전달:
+       model.addAttribute("member", memberService.findById(id));
+    
+    2. 객체가 null일 가능성을 항상 고려
+    3. 사용자 친화적인 메시지 제공
+    4. 속성 접근 시 Java Bean 규약 준수
+    5. 복잡한 객체는 DTO로 변환하여 전달
+    
+    === 다음 학습 단계 ===
+    1. 컬렉션(List) 처리 - th:each
+    2. 폼 데이터 바인딩 - th:field
+    3. 조각(Fragment) 활용 - th:insert, th:replace
+    4. 국제화 메시지 처리 - #{...}
+    -->
+    
+    <br/>
+    <a href="/">홈으로 돌아가기</a>
+
+</body>
+</html>

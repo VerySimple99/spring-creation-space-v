@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${shopName}">과일가게</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .fruit-card { border: 1px solid #ddd; padding: 20px; margin: 10px; border-radius: 8px; }
+        .btn { padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${shopName}">과일가게</h1>
+        <p th:text="${message}">환영 메시지</p>
+        
+        <nav>
+            <a href="/fruit/search" class="btn">과일 검색</a>
+            <a href="/fruit/add" class="btn">과일 등록</a>
+        </nav>
+    </div>
+</body>
+</html>

@@ -724,17 +724,29 @@ List<User> selectUsersByAgeRange(@Param("minAge") int minAge,
     @RestController : Rest API Service를 위한 컨트롤러 -> @Controller + @ResponseBody           
            
            
-           
-           
+ Spring Boot 3.4 + Thymeleaf 컨트롤러 핵심 요소  
+주요 어노테이션
+클래스 레벨 어노테이션           
+@Controller              // 뷰를 반환하는 MVC 컨트롤러 (Thymeleaf 사용 시 필수)
+@RequestMapping("/base") // 클래스 전체에 공통 URL 경로 설정       
                 
-  감사합니다			   
+ 메소드 레벨 어노테이션	   
+@GetMapping("/path")     // GET 요청 매핑
+@PostMapping("/path")    // POST 요청 매핑 (폼 전송)
+@RequestParam           // 쿼리 파라미터 바인딩
+@PathVariable           // URL 경로 변수 바인딩
+@ModelAttribute         // 폼 객체 바인딩
 
-
   
-  
-  
+ 주요 컴포넌트
+데이터 전달 컴포넌트 
+Model                   // 템플릿에 데이터 전달 (가장 기본)
+ModelAndView           // 뷰 이름 + 데이터를 함께 관리
+RedirectAttributes     // 리다이렉트 시 데이터 전달 
           
-          
+HttpServletRequest     // 요청 정보 접근
+HttpServletResponse    // 응답 제어
+HttpSession           // 세션 관리          
           
           
           
