@@ -2,15 +2,13 @@ package org.kosa.myproject.controller;
 
 
 import org.kosa.myproject.domain.Member;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Controller
-@RequestMapping("/member") // 공통된 URL 경로를 클래스 레벨에 설정하여 코드 중복을 줄입니다.
+//@Controller
+//@RequestMapping("/member") // 공통된 URL 경로를 클래스 레벨에 설정하여 코드 중복을 줄입니다.
 public class MemberController2 {
 	@GetMapping("/member-test")
 	public String memberTest(){

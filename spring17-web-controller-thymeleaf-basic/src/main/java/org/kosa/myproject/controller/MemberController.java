@@ -95,7 +95,7 @@ public class MemberController {
          * - 모델 데이터 유지
          * - 서버 내부에서 뷰로 직접 이동
          */
-        return "member/findbyid_result";
+        return "member/findbyid-result";
     }
 
     /**
@@ -114,11 +114,11 @@ public class MemberController {
          */
         if ("java".equals(memberId)) {
             // 성공 케이스: 데이터 설정 후 성공 뷰로 이동
-            model.addAttribute("member", "이강인 파리");
-            return "member/findbyid_ok";    // 성공 페이지
+            model.addAttribute("memberInfo", "이강인 파리");
+            return "member/findbyid-ok";    // 성공 페이지
         } else {
             // 실패 케이스: 실패 뷰로 이동 (데이터 없음)
-            return "member/findbyid_fail";  // 실패 페이지
+            return "member/findbyid-fail";  // 실패 페이지
         }
         
         /*
@@ -159,7 +159,7 @@ public class MemberController {
         // model.addAttribute("nick", nick);
         // model.addAttribute("age", age);
         
-        return "member/param_result";
+        return "member/param-result";
     }
 
     /**
@@ -228,7 +228,7 @@ public class MemberController {
          * 2. 세션에 임시 데이터 저장
          * 3. URL 파라미터로 필요한 정보 전달
          */
-        return "member/register_result";
+        return "member/register-result";
     }
 }
 

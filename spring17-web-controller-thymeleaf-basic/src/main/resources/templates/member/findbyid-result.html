@@ -26,22 +26,14 @@
     -->
     
     <!-- 현재 코드 - 학습용 -->
-    <div style="border: 2px solid #ff6b6b; padding: 10px; margin: 10px 0;">
-        <h3 style="color: #ff6b6b;">현재 코드 (개선 필요)</h3>
+
+        <h3 style="color: #ff6b6b;">회원객체</h3>
         <p th:text="${member}">회원 정보가 여기에 표시됩니다.</p>
-        <!-- 
-        결과 예시: "Member{id=1, name='홍길동', email='hong@example.com'}"
-        또는 "com.example.Member@a1b2c3d4" (toString() 미구현 시)
-        -->
-    </div>
+ 
     
     <!-- 
-    === 개선된 코드 - 실무 스타일 ===
     객체의 개별 속성에 접근하여 사용자 친화적으로 표시
-    -->
-    <div style="border: 2px solid #4ecdc4; padding: 10px; margin: 10px 0;">
-        <h3 style="color: #4ecdc4;">개선된 코드 (실무 스타일)</h3>
-        
+    -->    
         <!-- 
         === 타임리프 객체 속성 접근 문법 ===
         ${객체.속성}: 객체의 속성에 직접 접근
