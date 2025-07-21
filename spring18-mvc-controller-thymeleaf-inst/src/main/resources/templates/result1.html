@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>spring boot project</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <style type="text/css">
+  	body{
+  		background-color: yellow;
+  	}
+  </style>	
+</head>
+<body>
+<div class="container pt-3">
+<!-- html 주석 -->
+<!--/*   
+          thymeleaf 주석
+          Spring Boot에서 추천하는 템플릿 엔진 타임리프는 
+          src/main/resources/templates 아래에 html 확장자로 개발한다 
+*/-->
+	result1 <br><br>
+	<span class="result" th:text="${info1}">국가명1</span><br>
+	<span class="result" th:text="${info2}">국가명2</span><br>
+	<!--/*  
+		${info3}	정보가 없으면 나오지 않음 
+	*/-->
+	<span th:text="${info3}">국가명3</span><br>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			// class result 요소를 클릭하면 자신의 텍스트를 alert으로 출력
+			$(".result").click(function() {
+				alert($(this).text());
+			});
+		});
+	</script>
+</div>
+</body>
+</html>
+
+
+
+
+
