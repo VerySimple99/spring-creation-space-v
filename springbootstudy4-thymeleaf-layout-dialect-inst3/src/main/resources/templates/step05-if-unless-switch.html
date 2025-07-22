@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>if unless switch</title>
+</head>
+<body>
+<a href="/">Home</a><br><br>
+<!--/* 
+		if , unless => if ~ else if 
+		th:block => th:if 의 조건이 true인 경우에 th:block 태그와 그 하위 태그가 실행 
+		
+		th:text 의 문자열 조합 : ' ' 으로 처리하거나 |   | 로 감싸주면 된다  
+ */-->
+	<th:block th:if="${product.price<2000}">
+		<p>2000원 미만 가성비 맥주</p>
+		<span th:text="${product.name}"></span>
+		<span th:text="${product.price}"></span>
+	</th:block>
+ <br><br>
+ <th:block th:unless="${product.price<2000}">
+		<p>2000원 미만이 아닌 비싼 맥주</p>
+		<span th:text="${product.name}"></span>
+		<span th:text="${product.price}"></span>
+</th:block>
+<th:block th:if="${product.maker=='하이트진로'}">
+		<p>하이트진로 맥주</p>
+		<!--/* 
+				하나의 span 요소에 여러개의 변수 정보를 표현하고자 할 때 
+				아래는 name과 price 를 하나의 span 요소에 표현
+				여러 변수의 문자열을 합쳐서 표현할 때 양 옆에 |      | 로 감싸준다  
+		 */-->
+		<span th:text="|  상품명: ${product.name} 가격 : ${product.price}|">상품명 가격</span>		
+</th:block>
+<th:block th:if="${product.maker!='하이트진로'}">
+		<p>하이트진로 제조사가 아닌 맥주</p>
+		<span th:text="${product.name}"></span>
+		<span th:text="${product.price}"></span>
+</th:block>
+ <br><br>
+ <span th:if="${product.price<2000}" th:text="|${product.name} 가성비 짱|"></span>
+ <!--/* 
+ 		삼항연산자  (조건식) ? 식1 : 식2 
+ 		if ~ then :  (if) ? (then)
+ 		if ~ then ~ else : (if) ? (then) : (else) 
+  */-->
+  <br><br>
+   삼항 연산자 테스트 1 <span th:text="${product.price}<15000 ? ${product.name}"></span>
+  <br><br>
+   삼항 연산자 테스트 2 <span th:text="${product.price}>2000 ? |비싼 상품| : |저렴 상품|"></span>
+  <br><br>
+  thymeleaf switch case <br>
+  <th:block th:switch="${size}">
+  	<th:block th:case="L">
+  		<span>대</span>
+  	</th:block>
+  	<th:block th:case="M">
+  		<span>중</span>
+  	</th:block>
+  	<th:block th:case="S">
+  		<span>소</span>
+  	</th:block>
+  </th:block>	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

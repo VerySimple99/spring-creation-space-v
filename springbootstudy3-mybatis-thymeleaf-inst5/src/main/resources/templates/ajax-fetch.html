@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Fetch API + async/await AJAX 예제</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <style>
+    .code-highlight {
+      background-color: #e8f5e8;
+      border-left: 4px solid #28a745;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .modern-badge {
+      background: linear-gradient(45deg, #28a745, #20c997);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+    }
+  </style>
+</head>
+<body>
+<div class="container pt-3">
+  <h2 class="text-success">
+    Fetch API + async/await 기반 AJAX 통신 
+    <span class="modern-badge">Modern JS</span>
+  </h2>
+  <div class="alert alert-success">
+    <strong>핵심 개념:</strong> Fetch API는 Promise 기반의 현대적 HTTP 통신 방법이며,
+    async/await는 비동기 코드를 동기 코드처럼 깔끔하게 작성할 수 있게 해줍니다.
+  </div>
+
+  <h4 th:text="${message}">메세지</h4>
+  <br>
+
+  <!-- AJAX Test 1: 문자열 응답 -->
+  <div class="card mb-3 border-success">
+    <div class="card-header bg-light">
+      <h5>Test 1: async/await으로 문자열 응답받기</h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        <strong>목적:</strong> Fetch API를 사용해 서버에서 문자열을 받아옵니다.<br>
+        <strong>핵심:</strong> Promise 체이닝 없이 깔끔한 비동기 처리
+      </p>
+      <button type="button" id="fetchTestBtn1" class="btn btn-success">Fetch Test 1 - 문자열 응답</button>
+      <div class="code-highlight mt-2">
+        <small><strong>특징:</strong> try-catch로 에러 처리, await로 응답 대기</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- AJAX Test 2: JSON Object 응답 -->
+  <div class="card mb-3 border-success">
+    <div class="card-header bg-light">
+      <h5>Test 2: async/await으로 JSON Object 응답받기</h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        <strong>목적:</strong> Customer 객체를 JSON으로 받아 처리합니다.<br>
+        <strong>핵심:</strong> response.json() 메서드의 비동기 처리
+      </p>
+      <button type="button" id="fetchTestBtn2" class="btn btn-info">Fetch Test 2 - JSON Object</button>
+      <div class="code-highlight mt-2">
+        <small><strong>특징:</strong> 자동 JSON 파싱, 메서드 체이닝 최소화</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- AJAX Test 3: JSON Array 응답 -->
+  <div class="card mb-3 border-success">
+    <div class="card-header bg-light">
+      <h5>Test 3: async/await으로 JSON Array 응답받기</h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        <strong>목적:</strong> Customer 배열을 받아 현대적 방식으로 처리합니다.<br>
+        <strong>핵심:</strong> for...of 반복문과 구조분해할당 활용
+      </p>
+      <button type="button" id="fetchTestBtn3" class="btn btn-warning">Fetch Test 3 - JSON Array</button>
+      <div class="code-highlight mt-2">
+        <small><strong>특징:</strong> ES6+ 문법 활용, 함수형 프로그래밍 스타일</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- 에러 처리 테스트 -->
+  <div class="card mb-3 border-danger">
+    <div class="card-header bg-light">
+      <h5>Bonus: 에러 처리 테스트</h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        <strong>목적:</strong> 존재하지 않는 엔드포인트 호출로 에러 처리를 학습합니다.<br>
+        <strong>핵심:</strong> try-catch를 통한 우아한 에러 핸들링
+      </p>
+      <button type="button" id="fetchErrorBtn" class="btn btn-danger">에러 처리 테스트</button>
+      <div class="code-highlight mt-2">
+        <small><strong>특징:</strong> 네트워크 오류와 HTTP 오류 구분 처리</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  // DOM 로딩 완료 대기 (현대적 방식)
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    // === Fetch Test 1: 기본 문자열 응답 ===
+    document.getElementById('fetchTestBtn1').addEventListener('click', async function() {
+      try {
+        // fetch(): Promise를 반환하는 HTTP 요청 함수
+        // await: Promise가 resolve될 때까지 대기
+        const response = await fetch('testAjax1?id=javaking');
+        
+        // HTTP 상태 코드 확인 (200-299가 성공)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // text(): 응답 본문을 문자열로 변환 (비동기 메서드)
+        const result = await response.text();
+        
+        alert('Fetch로 받은 응답: ' + result);
+        
+      } catch (error) {
+        // 네트워크 오류, HTTP 오류, JSON 파싱 오류 등 모든 예외 처리
+        console.error('요청 중 오류 발생:', error);
+        alert('요청 실패: ' + error.message);
+      }
+    });
+
+    // === Fetch Test 2: JSON Object 응답 ===
+    document.getElementById('fetchTestBtn2').addEventListener('click', async function() {
+      try {
+        const response = await fetch('testAjax2?id=java');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // json(): 응답을 JSON으로 파싱 (JSON.parse() + 비동기 처리)
+        const customer = await response.json();
+        
+        // 구조분해할당을 사용한 현대적 방식 (선택사항)
+        const { id, name, address } = customer;
+        
+        alert(`고객 정보:\nID: ${id}\n이름: ${name}\n주소: ${address}`);
+        
+        // 콘솔에 객체 전체 출력 (개발자 도구에서 확인)
+        console.log('Customer 객체:', customer);
+        
+      } catch (error) {
+        console.error('JSON 요청 오류:', error);
+        alert('JSON 요청 실패: ' + error.message);
+      }
+    });
+
+    // === Fetch Test 3: JSON Array 응답 ===
+    document.getElementById('fetchTestBtn3').addEventListener('click', async function() {
+      try {
+        const response = await fetch('testAjax3?address=도하');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const customerList = await response.json();
+        
+        console.log(`고객 목록 개수: ${customerList.length}`);
+        
+        // 현대적 방식 1: for...of 반복문 (인덱스가 필요 없을 때)
+        for (const customer of customerList) {
+          alert(`고객: ${customer.name} (${customer.id})`);
+        }
+        
+        // 현대적 방식 2: forEach + 화살표 함수 (함수형 프로그래밍)
+        // customerList.forEach((customer, index) => {
+        //   console.log(`고객 ${index + 1}: ${customer.name} (${customer.id})`);
+        // });
+        
+        // 현대적 방식 3: map으로 데이터 변환 (새 배열 생성)
+        // const customerNames = customerList.map(customer => customer.name);
+        // console.log('고객 이름들:', customerNames);
+        
+      } catch (error) {
+        console.error('배열 요청 오류:', error);
+        alert('배열 요청 실패: ' + error.message);
+      }
+    });
+
+    // === Bonus: 에러 처리 테스트 ===
+    document.getElementById('fetchErrorBtn').addEventListener('click', async function() {
+      try {
+        // 존재하지 않는 엔드포인트 호출
+        const response = await fetch('nonexistent-endpoint');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const result = await response.text();
+        alert('예상치 못한 성공: ' + result);
+        
+      } catch (error) {
+        // 에러 타입별 처리
+        if (error instanceof TypeError) {
+          alert('네트워크 오류: 서버에 연결할 수 없습니다.');
+        } else {
+          alert(`HTTP 오류: ${error.message}`);
+        }
+        console.error('상세 에러 정보:', error);
+      }
+    });
+  });
+
+  /*
+  === Fetch API + async/await 핵심 개념 정리 ===
+  
+  1. Fetch API 기본 구조:
+     - fetch(url, options): Promise<Response> 반환
+     - Response 객체의 주요 메서드:
+       * text(): Promise<string> - 텍스트 응답
+       * json(): Promise<object> - JSON 파싱
+       * blob(): Promise<Blob> - 바이너리 데이터
+       * status, statusText, ok 속성으로 상태 확인
+  
+  2. async/await 패턴:
+     - async function: Promise를 반환하는 함수 선언
+     - await: Promise가 완료될 때까지 대기 (동기적 작성법)
+     - try-catch: 비동기 오류 처리
+  
+  3. XMLHttpRequest vs Fetch 비교:
+     XMLHttpRequest                 |  Fetch API + async/await
+     --------------------------------|---------------------------
+     콜백 기반 (복잡한 중첩)         |  Promise 기반 (깔끔한 체이닝)
+     상태 코드 수동 확인             |  response.ok로 간편 확인
+     JSON 수동 파싱                 |  response.json() 자동 파싱
+     많은 보일러플레이트 코드         |  간결한 코드
+     IE 지원                        |  모던 브라우저 전용
+  
+  4. 실무 활용 패턴:
+     - API 호출 함수 모듈화
+     - 에러 처리의 일관성
+     - Loading 상태 관리
+     - 타임아웃 처리
+  
+  === ES6+ 문법 활용 포인트 ===
+  - 템플릿 리터럴: `문자열 ${변수} 삽입`
+  - 구조분해할당: const { id, name } = customer
+  - 화살표 함수: (param) => { return value; }
+  - for...of: 배열 순회의 현대적 방법
+  - Promise 체이닝보다 async/await 선호
+  
+  === 2024년 현재 트렌드 ===
+  - Fetch API는 현재 모든 주요 브라우저에서 지원
+  - React, Vue 등 모던 프레임워크에서 표준으로 사용
+  - axios 같은 라이브러리도 내부적으로 Fetch 활용
+  - 서버 사이드(Node.js)에서도 Fetch API 지원 시작
+  */
+
+  /*
+  === 미니 프로젝트 아이디어 ===
+  학습한 내용을 종합하여 다음과 같은 미니 프로젝트를 구성할 수 있습니다:
+  
+  1. 고객 관리 시스템 (Customer Management)
+     - 고객 목록 조회 (JSON Array)
+     - 고객 상세 정보 (JSON Object)  
+     - 고객 검색 기능 (문자열 쿼리)
+     - 에러 처리와 로딩 상태 표시
+  
+  2. 실시간 데이터 대시보드
+     - 주기적 데이터 갱신 (setInterval + fetch)
+     - 차트 라이브러리와 연동
+     - WebSocket과의 비교 학습
+  
+  설계 지침:
+  - MVC 패턴 적용 (컨트롤러 분리)
+  - 재사용 가능한 API 클래스 설계
+  - 사용자 경험 최적화 (로딩, 에러 메시지)
+  */
+</script>
+</body>
+</html>

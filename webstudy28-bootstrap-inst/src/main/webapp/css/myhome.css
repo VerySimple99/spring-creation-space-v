@@ -1,0 +1,10 @@
+@charset "UTF-8";
+.header{
+	padding-bottom: 30px;
+}
+.title{
+	width: 50%
+}
+.boardlist th,.boardlist td{
+	text-align: center;
+}

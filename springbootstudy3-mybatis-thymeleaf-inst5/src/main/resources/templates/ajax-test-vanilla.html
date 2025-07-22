@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>XMLHttpRequest AJAX 예제</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <style>
+    .code-highlight {
+      background-color: #f8f9fa;
+      border-left: 4px solid #007bff;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="container pt-3">
+  <h2 class="text-primary">XMLHttpRequest 기반 AJAX 통신</h2>
+  <div class="alert alert-info">
+    <strong>핵심 개념:</strong> XMLHttpRequest는 브라우저에서 제공하는 네이티브 객체로, 
+    페이지 새로고침 없이 서버와 데이터를 주고받을 수 있는 비동기 통신의 근본입니다.
+  </div>
+
+  <h4 th:text="${message}">메세지</h4>
+  <br>
+
+  <!-- AJAX Test 1: 문자열 응답 -->
+  <div class="card mb-3">
+    <div class="card-header bg-light">
+      <h5>Test 1: 서버로부터 문자열 응답받기</h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        <strong>목적:</strong> GET 방식으로 서버에 데이터를 전송하고 문자열 응답을 받습니다.<br>
+        <strong>핵심:</strong> XMLHttpRequest의 기본 사용법과 상태 변화 감지
+      </p>
+      <button type="button" id="ajaxTestBtn1" class="btn btn-primary">AJAX Test 1 - 문자열 응답</button>
+      <div class="code-highlight mt-2">
+        <small><strong>동작:</strong> testAjax1?id=javaking → "ajax 응답 javaking"</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- AJAX Test 2: JSON Object 응답 -->
+  <div class="card mb-3">
+    <div class="card-header bg-light">
+      <h5>Test 2: 서버로부터 JSON Object 응답받기</h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        <strong>목적:</strong> 서버에서 Customer 객체를 JSON 형태로 받아 처리합니다.<br>
+        <strong>핵심:</strong> JSON.parse()를 통한 응답 데이터 파싱
+      </p>
+      <button type="button" id="ajaxTestBtn2" class="btn btn-success">AJAX Test 2 - JSON Object</button>
+      <div class="code-highlight mt-2">
+        <small><strong>동작:</strong> testAjax2?id=java → Customer JSON 객체</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- AJAX Test 3: JSON Array 응답 -->
+  <div class="card mb-3">
+    <div class="card-header bg-light">
+      <h5>Test 3: 서버로부터 JSON Array 응답받기</h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        <strong>목적:</strong> 서버에서 Customer 리스트를 JSON 배열로 받아 반복 처리합니다.<br>
+        <strong>핵심:</strong> 배열 데이터 순회와 객체 속성 접근
+      </p>
+      <button type="button" id="ajaxTestBtn3" class="btn btn-warning">AJAX Test 3 - JSON Array</button>
+      <div class="code-highlight mt-2">
+        <small><strong>동작:</strong> testAjax3?address=도하 → Customer 배열</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  // DOM이 완전히 로드된 후 실행 (jQuery의 $(document).ready()와 동일한 역할)
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    // === AJAX Test 1: 기본 문자열 응답 ===
+    document.getElementById('ajaxTestBtn1').addEventListener('click', function() {
+      // XMLHttpRequest 객체 생성 - 브라우저의 네이티브 AJAX 객체
+      const xhr = new XMLHttpRequest();
+      
+      // HTTP 요청 설정: GET 방식, URL, 비동기 처리(true)
+      xhr.open('GET', 'testAjax1?id=javaking', true);
+      
+      // 요청 상태가 변경될 때마다 실행되는 이벤트 핸들러
+      xhr.onreadystatechange = function() {
+        // readyState 4: 요청 완료, status 200: 성공
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // responseText: 서버의 텍스트 응답 데이터
+          alert('응답받은 문자열: ' + xhr.responseText);
+        } else if (xhr.readyState === 4) {
+          // 요청은 완료되었지만 오류가 발생한 경우
+          alert('요청 실패: ' + xhr.status);
+        }
+      };
+      
+      // 실제 HTTP 요청 전송
+      xhr.send();
+    });
+
+    // === AJAX Test 2: JSON Object 응답 ===
+    document.getElementById('ajaxTestBtn2').addEventListener('click', function() {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', 'testAjax2?id=java', true);
+      
+      // 응답 타입을 JSON으로 설정 (자동 파싱을 위해)
+      xhr.responseType = 'json';
+      
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // response: 자동으로 JSON 파싱된 객체
+          // 만약 responseType을 설정하지 않았다면 JSON.parse(xhr.responseText) 사용
+          const customer = xhr.response;
+          
+          // 객체의 속성에 접근하여 데이터 표시
+          alert('고객 ID: ' + customer.id + 
+                '\n고객 이름: ' + customer.name + 
+                '\n고객 주소: ' + customer.address);
+        } else if (xhr.readyState === 4) {
+          alert('요청 실패: ' + xhr.status);
+        }
+      };
+      
+      xhr.send();
+    });
+
+    // === AJAX Test 3: JSON Array 응답 ===
+    document.getElementById('ajaxTestBtn3').addEventListener('click', function() {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', 'testAjax3?address=도하', true);
+      xhr.responseType = 'json';
+      
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // 서버에서 받은 Customer 배열
+          const customerList = xhr.response;
+          
+          // 배열 길이 확인
+          console.log('고객 목록 개수: ' + customerList.length);
+          
+          // for 반복문을 사용한 배열 순회
+          for (let i = 0; i < customerList.length; i++) {
+            const customer = customerList[i];
+            alert('고객 ' + (i + 1) + ': ' + customer.name + ' (' + customer.id + ')');
+          }
+          
+          // 현대적 방법: forEach를 사용한 배열 순회 (참고용)
+          // customerList.forEach((customer, index) => {
+          //   console.log(`고객 ${index + 1}: ${customer.name} (${customer.id})`);
+          // });
+          
+        } else if (xhr.readyState === 4) {
+          alert('요청 실패: ' + xhr.status);
+        }
+      };
+      
+      xhr.send();
+    });
+  });
+
+  /*
+  === XMLHttpRequest 핵심 개념 정리 ===
+  
+  1. XMLHttpRequest 생성자:
+     - new XMLHttpRequest(): AJAX 통신을 위한 객체 생성
+  
+  2. 주요 메서드:
+     - open(method, url, async): 요청 초기화
+     - send(data): 실제 요청 전송
+     - setRequestHeader(): HTTP 헤더 설정
+  
+  3. 주요 속성:
+     - readyState: 요청 상태 (0~4)
+       * 0: UNSENT (아직 open() 호출 안됨)
+       * 1: OPENED (open() 호출됨)
+       * 2: HEADERS_RECEIVED (응답 헤더 수신)
+       * 3: LOADING (응답 본문 수신 중)
+       * 4: DONE (응답 완료)
+     - status: HTTP 상태 코드 (200, 404, 500 등)
+     - responseText: 텍스트 응답 데이터
+     - response: 파싱된 응답 데이터 (responseType에 따라)
+  
+  4. 이벤트 핸들러:
+     - onreadystatechange: 상태 변경 시 호출
+     - onload: 요청 성공 시 호출 (readyState 4와 동일)
+     - onerror: 요청 실패 시 호출
+  
+  === 실무 활용 포인트 ===
+  - XMLHttpRequest는 모든 브라우저에서 지원하는 표준
+  - Fetch API보다 세밀한 제어 가능 (진행률, 타임아웃 등)
+  - 레거시 브라우저 호환성이 중요한 프로젝트에서 여전히 사용
+  - Promise 기반이 아니므로 콜백 패턴 사용
+  */
+</script>
+</body>
+</html>

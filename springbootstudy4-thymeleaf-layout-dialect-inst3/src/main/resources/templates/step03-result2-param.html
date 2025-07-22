@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>step03-result2-param</title>
+</head>
+<body>
+<!-- href="" : 디자인팀에서 제작한 웹페이지에서 부여된 속성, WAS 환경이 아닌 로컬 환경에서 링크 속성을 부여 , 
+th:href="" : WAS 환경 즉 컨트롤러를 거쳐 속성이 부여되는 링크     -->
+<a href="index.html" th:href="@{/}">Home</a><br><br>
+product list result view <br><br>
+주문번호 : <span th:text="${param.orderId}"></span><br><br>
+제조사 : <span th:text="${param.maker}"></span>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

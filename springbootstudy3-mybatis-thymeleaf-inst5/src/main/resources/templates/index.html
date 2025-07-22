@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>spring boot project</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<div class="container pt-3">
+<!-- html 주석 -->
+<!--/*   
+          thymeleaf 주석
+          Spring Boot에서 추천하는 템플릿 엔진 타임리프는 
+          src/main/resources/templates 아래에 html 확장자로 개발한다 
+*/-->
+ 타임리프 thymeleaf <br><br>
+ <span th:text="${message}">컨트롤러가 공유한 메세지</span><br><br>
+ <!--/*  
+ 			src/main/resources/static 아래에 정적 파일을 배치한다 ( 이미지 , css, js 등 )
+ */-->
+ <img src="/images/thymeleaf.png"><br><br>
+ <a href="/hello">MyTestController test1</a><br><br>
+ <!--/* 
+ 		 hi  url pattern 에 대한  hi 메서드를 컨트롤러에 정의하고 
+ 		 result2.html (배경색 lime) 로 응답하게 한다 
+  */-->
+ <a href="/hi">MyTestController test2</a><br><br>
+ <!--/* 
+ 		paramTest1 url pattern  의 paramTest1 메서드를 정의해서 
+ 		result3.html 에서 응답하게 한다 
+ 		컨트롤러 메서드에서 쿼리스트링으로 전달한 두 개의 정보를 sysout 해서 
+ 		콘솔에 출력해본다 	
+  */-->
+ <a href="/paramTest1?customerId=javaking&customerName=조규성">MyTestController test3</a><br><br>
+ <!--/* 
+ 		컨트롤러 메서드 paramTest2 에서는 post 방식만 허용하도록 한다 
+ 		매개변수로 memberName :String 과 memberAge:int 를 받아서 콘솔에 출력 
+ 		응답은 result4.html 에서 한다  
+  */--> 
+ <form method="post" action="/paramTest2">
+ 	<input type="text" name="memberName" required="required"  placeholder="회원명 "><br>
+ 	<input type="number" name="memberAge" required="required"  placeholder="회원나이 "><br>
+ 	<button type="submit">등록</button>
+ </form><br><br>
+ <form action="/paramTest3" method="post">
+ 	<input type="checkbox" name="menu" value="충만치킨">충만치킨<br>
+ 	<input type="checkbox" name="menu" value="허니버터아몬드">허니버터아몬드<br>
+ 	<input type="checkbox" name="menu" value="교촌치킨">교촌치킨<br>
+	<button type="submit">주문</button>	
+ </form><br><br>
+ <!--  mybatis 연동 확인    -->
+<a href="/getTotalMemberCount">전체회원수보기</a> 
+<br><br>
+<form method="post" action="/paramTest4">
+<input type="text" name="id" placeholder="아이디" required="required"><br>
+<input type="text" name="name" placeholder="이름" required="required"><br>
+<input type="text" name="address" placeholder="주소" required="required"><br>
+<button type="submit">등록</button>
+</form>
+<br><br>
+<form method="post" action="/paramTest5">
+<input type="text" name="id" placeholder="아이디" required="required"><br>
+<input type="text" name="name" placeholder="이름" required="required"><br>
+<!--/*  has a 표현시 인스턴스변수명.인스턴스변수명 
+		 spring mvc 의 HandlerAdapter 가  컨트롤러에게  UserVO has a CarVO 객체를 
+		 자동 생성해 준다 	
+      */-->
+<input type="text" name="carVO.model" placeholder="차모델명" required="required"><br>
+<input type="number" name="carVO.price" placeholder="차가격" required="required"><br>
+<button type="submit">등록</button>
+</form>
+<br><br>
+<!--/*  
+		새로고침 f5  시  재동작 방지 ( 재등록 방지 ) 를 위해서는 
+		redirect 방식으로 컨트롤러가 응답해야 한다 
+							  WAS ( Web Server + Web Container ) 
+		index --request --    
+									redirect : client browser에서 특정 url로 이동 명령
+				<-- response --  view name : "redirect:registerResult"
+													서두에 redirect:  => spring mvc 규칙
+													registerResult : 요청 url pattern 
+				
+				--registerResult request ==>  @RequestMapping("registerResult")									
+													 
+				<--result8 : response		
+				
+	별도의 CustomerController에서 처리하도록 한다 			
+*/-->
+<form method="post" action="/redirectTest">
+<input type="text" name="id" placeholder="아이디" required="required"><br>
+<input type="text" name="name" placeholder="이름" required="required"><br>
+<input type="text" name="address" placeholder="주소" required="required"><br>
+<button type="submit">고객등록</button>
+</form>
+<br><br>
+<!-- 별도의 MyAjaxTestController 에서 테스트  -->
+<a href="ajaxTestView">Ajax Test</a>
+<br><br>
+<!-- MyTestController 에서 테스트  -->
+<!-- 컨트롤러에서 매개변수로 session 을 전달하도록 처리 -->
+<a href="sessionTest0">Login 관련 session Test0</a>
+<br><br>      
+<!-- 컨트롤러에서 매개변수로 session 을 전달받고 
+      세션에 customerVO를 할당하도록 처리 -->
+<a href="sessionTest">Login 관련 session Test 인증정보 할당</a>
+<br><br>
+<!-- 컨트롤러에서 매개변수로 request를 전달받아 세션 존재 유무와 
+	  인증정보를 확인 ( request.getSession(false) 를 이용해 확인 ) 
+ -->
+<a href="sessionTest2">Login 여부 확인 관련 session Test</a>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
