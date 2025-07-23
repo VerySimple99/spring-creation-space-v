@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>if unless switch</title>
+</head>
+<body>
+<a href="/">Home</a><br><br>
+<!--/* 
+		if , unless => if ~ else if 
+		th:block => th:if 의 조건이 true인 경우에 th:block 태그와 그 하위 태그가 실행 
+		
+		th:text 의 문자열 조합 : ' ' 으로 처리하거나 |   | 로 감싸주면 된다  
+ */-->
+	
+		<p>2000원 미만 가성비 맥주</p>
+		<span ></span>
+		<span ></span>
+
+ <br><br>
+ 
+		<p>2000원 미만이 아닌 비싼 맥주</p>
+		<span ></span>
+		<span ></span>
+
+
+		<p>하이트진로 맥주</p>
+		<!--/* 
+				하나의 span 요소에 여러개의 변수 정보를 표현하고자 할 때 
+				아래는 name과 price 를 하나의 span 요소에 표현
+				여러 변수의 문자열을 합쳐서 표현할 때 양 옆에 |      | 로 감싸준다  
+		 */-->
+		<span >상품명 가격</span>		
+
+		<p>하이트진로 제조사가 아닌 맥주</p>
+		<span th:text="${product.name}"></span>
+		<span th:text="${product.price}"></span>
+
+ <br><br>
+ <span ></span>
+ <!--/* 
+ 		삼항연산자  (조건식) ? 식1 : 식2 
+ 		if ~ then :  (if) ? (then)
+ 		if ~ then ~ else : (if) ? (then) : (else) 
+  */-->
+  <br><br>
+   삼항 연산자 테스트 1 <span ></span>
+  <br><br>
+   삼항 연산자 테스트 2 <span ></span>
+  <br><br>
+  thymeleaf switch case <br>
+ 
+  		<span>대</span>
+  
+  		<span>중</span>
+  
+  		<span>소</span>
+  	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

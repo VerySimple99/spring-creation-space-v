@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>step01-text-expression</title>
+</head>
+<body>
+<a href="/" th:href="@{/}">Home</a><br><br>
+<!--/* 
+			Controller가 공유한 member 정보를 화면에 표현
+			
+			VO의 getter Method를 호출  
+ */-->
+ <span th:text="${member.address}">주소</span>에 사시는
+ <span th:text="${member.name}">회원명</span>님
+ <!--/* 
+ 			Controller가 공유한 member에 다양한 방법으로 접근할 수 있다  
+ 			참고로 el jstl 즉 jsp 에서는 get 과 is 계열의 메서드를 접근할 수 있다 
+ 			=> 접근법은 소문자로 시작하는 get 과 is 를 메서드명으로 접근했다 
+ 			thymeleaf 는 위 jsp 의 제한 없이 변수명 메서드명으로 유연하게 접근할 수 있다 
+  */-->
+  <br><br>
+  <span th:text="${member.nextPageGroup}">다음페이지그룹-변수명으로 접근하는 방식</span><br>
+  <span th:text="${member.isNextPageGroup()}">다음페이지그룹-메서드로 접근하는 방식</span><br>
+  <span th:text="${member.methodTest()}">다음페이지그룹</span>
+</body>
+</html>
+
+
+
+
+
+
+
+

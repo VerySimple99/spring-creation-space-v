@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>step03-result1-param</title>
+</head>
+<body>
+<a href="" th:href="@{/}">Home</a><br><br>
+board list result view <br><br>
+pageNo : <span th:text="${param.pageNo}"></span><br><br>
+keyword : <span th:text="${param.keyword}"></span>
+</body>
+</html>

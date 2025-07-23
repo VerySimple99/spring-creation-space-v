@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>step03-link-href-querystring</title>
+</head>
+<body>
+<a href="/" th:href="@{/}">Home</a><br><br>
+<!--/* 
+			link url href 경로 : board/list?pageNo=7&keyword=spring
+			<a href="" th:href="@{/board/list(pageNo=${pageNo},keyword=${keyword})}">
+ */-->
+ <!--/*
+ 				아래는 href="/board/list?pageNo=7" 을 표현 
+   */-->
+ <a href="/board/list?pageNo=7" >link href querystring test1</a><br>
+  <!--/*
+ 				아래는 href="/board/list/pageNo=7&keyword=spring" 을 표현 
+   */-->
+ <a href="/board/list/pageNo=7&keyword=spring">link href querystring test2</a><br><br>
+ <!--/* 
+ 		  /order/details?orderId=3&maker=LG       => 3 과 LG 는 컨트롤러에서 공유한 정보  		  
+ 		  
+  */--> 
+ <a href="/order/details?orderId=3&maker=LG">link href querystring test3</a>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

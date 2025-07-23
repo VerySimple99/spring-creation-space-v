@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>Insert title here</title>
+</head>
+<body>
+<div class="container pt-4">
+<!--/*  thymeleaf jquery ajax   */-->
+<h4>SpringBoot Thymeleaf ajax</h4>
+<!--/*  jquery ajax 를 이용해 상품수를 제공 (일반적인 ajax 방식)    */-->
+<button id="countBtn1">ajax test1</button><span id="productCountView1"></span><br>
+<!--/*  jquery ajax 를 이용해 상품수를 제공 (thymeleaf를 이용한 ajax 방식) 
+         th:text="${productCount}" : Controller에서 할당한 정보 
+   */-->
+<button id="countBtn2">ajax test2</button><span id="productCountView2" th:text="${productCount}"></span><br>
+<script type="text/javascript">
+	$(document).ready(function() {
+		// ProductController 에서  ajax 방식으로 응답 
+		$("#countBtn1").click(function() {
+			$.ajax({
+				type:"get",
+				url:"getProductTotalCount",
+				success:function(result){
+					//alert(result);	
+					$("#productCountView1").text(result);
+				}
+			});//ajax
+		});//click
+		// thymeleaf ajax 방식을 이용한 테스트 
+		// 현 상품수 조회에는 특별히 필요없으나 용법을 익히기 위해 테스트		
+		$("#countBtn2").click(function() {
+			$.ajax({
+				type:"get",
+				url:"getProductTotalCount2",
+				success:function(result){
+					//alert(result);	
+					$("#productCountView2").replaceWith(result); // replaceWith : 컨트롤러에서 응답받은 내용으로 대체한다 
+				}
+			});//ajax
+		});//click
+	});//ready
+</script>
+</div>
+</body>
+</html>
+
+
+
+
+
+
