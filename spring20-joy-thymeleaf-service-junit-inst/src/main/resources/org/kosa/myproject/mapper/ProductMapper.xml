@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- ProductMapper 인터페이스와 매핑되는 XML 파일 -->
+<mapper namespace="org.kosa.myproject.mapper.ProductMapper">
+	<select id="getTotalProductCount" resultType="int">
+		select count(*) from product
+	</select>
+	
+	
+    <!-- 
+    결과 매핑 설정: DB 컬럼명과 Java 객체 필드명 매핑
+    - application.properties의 map-underscore-to-camel-case=true 설정으로
+      자동 매핑되지만 명시적으로 정의하여 가독성 향상
+    -->
+    <resultMap id="ProductResultMap" type="org.kosa.myproject.domain.Product">
+        <id property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="maker" column="maker"/>
+        <result property="price" column="price"/>
+        <result property="stockQuantity" column="stock_quantity"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 
+    모든 상품 목록 조회
+    - ORDER BY 절로 최신 등록순 정렬
+    - resultMap을 사용하여 객체 매핑
+    -->
+    <select id="selectAllProducts" resultMap="ProductResultMap">
+        SELECT 
+            product_id,
+            product_name,
+            maker,
+            price,
+            stock_quantity,
+            created_at
+        FROM product
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 
+    상품번호로 특정 상품 조회
+    - @Param("productId")로 전달된 파라미터를 #{productId}로 사용
+    - 단일 객체 반환
+    -->
+    <select id="selectProductById" resultMap="ProductResultMap">
+        SELECT 
+            product_id,
+            product_name,
+            maker,
+            price,
+            stock_quantity,
+            created_at
+        FROM product
+        WHERE product_id = #{productId}
+    </select>
+
+    <!-- 
+    새로운 상품 등록
+    - useGeneratedKeys="true": Auto Increment 키 사용
+    - keyProperty="productId": 생성된 키를 productId 필드에 설정
+    - 등록 시점에는 stock_quantity를 0으로, created_at는 현재시간으로 자동 설정
+    -->
+    <insert id="insertProduct" useGeneratedKeys="true" keyProperty="productId">
+        INSERT INTO product (
+            product_name,
+            maker,
+            price,
+            stock_quantity,
+            created_at
+        ) VALUES (
+            #{productName},
+            #{maker},
+            #{price},
+            COALESCE(#{stockQuantity}, 0),  -- null인 경우 0으로 설정
+            NOW()
+        )
+    </insert>
+
+    <!-- 
+    상품 정보 수정
+    - 상품명, 제조사, 가격만 수정 가능
+    - 재고수량과 등록일시는 별도 기능에서 관리
+    -->
+    <update id="updateProduct">
+        UPDATE product 
+        SET 
+            product_name = #{productName},
+            maker = #{maker},
+            price = #{price}
+        WHERE product_id = #{productId}
+    </update>
+
+    <!-- 
+    상품 삭제
+    - 실제 프로젝트에서는 논리 삭제(deleted_at 컬럼 사용)를 권장하지만
+    - 학습 목적으로 물리 삭제 구현
+    -->
+    <delete id="deleteProduct">
+        DELETE FROM product 
+        WHERE product_id = #{productId}
+    </delete>
+
+    <!-- 
+    ========== 향후 트랜잭션 학습용 쿼리 (2단계에서 사용) ==========
+    현재는 주석 처리하고, 2단계에서 활성화할 예정
+    -->
+    
+    <!-- 재고 수량 업데이트 (입고/출고 시 사용) -->
+    <!--
+    <update id="updateStockQuantity">
+        UPDATE product 
+        SET stock_quantity = stock_quantity + #{quantityChange}
+        WHERE product_id = #{productId}
+    </update>
+    -->
+
+    <!-- 재고 부족 체크용 조회 -->
+    <!--
+    <select id="selectStockQuantity" resultType="int">
+        SELECT stock_quantity
+        FROM product
+        WHERE product_id = #{productId}
+    </select>
+    -->
+
+</mapper>

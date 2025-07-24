@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>상품 등록 - 상품관리 시스템</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Noto Sans KR', sans-serif; }
+        .main-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .page-header { background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 30px 0; margin-bottom: 30px; text-align: center; }
+        .card { box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: none; margin-bottom: 20px; }
+        .btn-custom { border-radius: 20px; font-weight: 600; padding: 10px 30px; }
+        .form-control { border-radius: 8px; border: 2px solid #e9ecef; padding: 12px 16px; }
+        .form-control:focus { border-color: #28a745; box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25); }
+        .alert { border-radius: 10px; font-weight: 500; }
+        .form-group label { font-weight: 600; color: #495057; }
+        .required { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <!-- 페이지 헤더 -->
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-plus-circle"></i> 상품 등록</h1>
+            <p class="lead mb-0">새로운 상품을 등록하세요</p>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- 네비게이션 -->
+        <div class="text-center mb-4">
+            <a href="/products" class="btn btn-outline-primary btn-custom mx-2">상품 목록</a>
+            <a href="/products/register" class="btn btn-success btn-custom mx-2">상품 등록</a>
+        </div>
+
+        <!-- 에러 메시지 -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+        </div>
+
+        <!-- 상품 등록 폼 카드 -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-edit text-success"></i> 
+                    상품 정보 입력
+                </h5>
+                <small class="text-muted">
+                    <span class="required">*</span> 표시는 필수 입력 항목입니다.
+                </small>
+            </div>
+            
+            <div class="card-body">
+                <!-- PRG 패턴의 핵심: POST 요청 처리 후 redirect -->
+                <form th:action="@{/products/register}" method="post" th:object="${product}">
+                    
+                    <!-- 상품명 입력 -->
+                    <div class="form-group">
+                        <label for="productName">
+                            <i class="fas fa-tag"></i> 상품명 <span class="required">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="productName" 
+                               name="productName"
+                               th:field="*{productName}"
+                               placeholder="예: 갤럭시 S24, 아이폰 15, 맥북 프로"
+                               maxlength="100"
+                               required>
+                        <small class="form-text text-muted">
+                            상품을 구별할 수 있는 명확한 이름을 입력하세요. (최대 100자)
+                        </small>
+                    </div>
+
+                    <!-- 제조사 입력 -->
+                    <div class="form-group">
+                        <label for="maker">
+                            <i class="fas fa-industry"></i> 제조사 <span class="required">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="maker" 
+                               name="maker"
+                               th:field="*{maker}"
+                               placeholder="예: 삼성, 애플, LG, 마이크로소프트"
+                               maxlength="50"
+                               required>
+                        <small class="form-text text-muted">
+                            상품을 제조한 회사명을 입력하세요. (최대 50자)
+                        </small>
+                    </div>
+
+                    <!-- 가격 입력 -->
+                    <div class="form-group">
+                        <label for="price">
+                            <i class="fas fa-won-sign"></i> 가격 <span class="required">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="price" 
+                                   name="price"
+                                   th:field="*{price}"
+                                   placeholder="1200000"
+                                   min="1"
+                                   max="99999999"
+                                   step="1"
+                                   required>
+                            <div class="input-group-append">
+                                <span class="input-group-text">원</span>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">
+                            판매 가격을 숫자로만 입력하세요. (예: 1200000 → 1,200,000원)
+                        </small>
+                    </div>
+
+                    <!-- 안내 메시지 -->
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>참고사항:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>재고 수량은 등록 시 0으로 설정됩니다.</li>
+                            <li>등록 후 별도 기능을 통해 재고를 관리하세요.</li>
+                            <li>등록일시는 자동으로 현재 시간으로 설정됩니다.</li>
+                        </ul>
+                    </div>
+
+                    <!-- 버튼 영역 -->
+                    <div class="text-center pt-3">
+                        <button type="submit" class="btn btn-success btn-custom btn-lg mr-3">
+                            <i class="fas fa-save"></i> 상품 등록
+                        </button>
+                        <a href="/products" class="btn btn-outline-secondary btn-custom btn-lg">
+                            <i class="fas fa-times"></i> 취소
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 도움말 카드 -->
+        <div class="card border-light">
+            <div class="card-body text-center">
+                <h6 class="text-muted">
+                    <i class="fas fa-lightbulb"></i> 팁
+                </h6>
+                <p class="text-muted mb-0">
+                    상품 등록 후 <strong>상품 목록</strong>에서 등록된 상품을 확인할 수 있습니다.
+                    <br>
+                    향후 재고 관리 기능을 통해 입고/출고 처리가 가능합니다.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // 메시지 자동 닫기
+        setTimeout(function() { $('.alert').fadeOut('slow'); }, 5000);
+        
+        // 폼 제출 시 중복 방지 및 로딩 표시
+        $('form').submit(function() {
+            var submitBtn = $(this).find('button[type="submit"]');
+            submitBtn.prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin"></i> 등록 중...');
+        });
+        
+        // 가격 입력 시 천단위 콤마 미리보기 (선택사항)
+        $('#price').on('input', function() {
+            var value = $(this).val();
+            if(value) {
+                var formattedValue = Number(value).toLocaleString() + '원';
+                $(this).attr('title', formattedValue);
+            }
+        });
+        
+        // 실시간 유효성 검사 (선택사항)
+        $('.form-control').on('blur', function() {
+            if($(this).prop('required') && !$(this).val().trim()) {
+                $(this).addClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid').addClass('is-valid');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle != null ? pageTitle : '상품관리 시스템'}">상품관리 시스템</title>
+    
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    
+    <!-- 심플한 커스텀 스타일 -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: none;
+            margin-bottom: 20px;
+        }
+        .page-header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .btn-custom {
+            border-radius: 20px;
+            font-weight: 600;
+            padding: 8px 20px;
+        }
+        .table th {
+            background-color: #e9ecef;
+            border-top: none;
+            font-weight: 600;
+        }
+        .alert {
+            border-radius: 10px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- 페이지 헤더 -->
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-box"></i> 상품관리 시스템</h1>
+            <p class="lead mb-0">간단하고 직관적인 상품 관리</p>
+        </div>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+        <!-- 네비게이션 메뉴 (심플한 버튼 형태) -->
+        <div class="text-center mb-4">
+            <a href="/products" class="btn btn-outline-primary btn-custom mx-2">상품 목록</a>
+            <a href="/products/register" class="btn btn-outline-success btn-custom mx-2">상품 등록</a>
+        </div>
+
+        <!-- 메시지 표시 영역 -->
+        <!-- 성공 메시지 -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${successMessage}">성공 메시지</span>
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+
+        <!-- 에러 메시지 -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i>
+            <span th:text="${errorMessage}">에러 메시지</span>
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+
+        <!-- 페이지별 컨텐츠 영역 -->
+        <div th:replace="${contentFragment}">
+            <p>페이지 내용이 여기에 표시됩니다.</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap 4 JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Font Awesome (아이콘) -->
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    
+    <!-- 간단한 사용자 경험 개선 스크립트 -->
+    <script>
+        // 자동으로 alert 메시지 닫기 (5초 후)
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+        
+        // 폼 제출 시 중복 방지
+        $('form').submit(function() {
+            $(this).find('button[type="submit"]').prop('disabled', true).text('처리중...');
+        });
+    </script>
+</body>
+</html>
