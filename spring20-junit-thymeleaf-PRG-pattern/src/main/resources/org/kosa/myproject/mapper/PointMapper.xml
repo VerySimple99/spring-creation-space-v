@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- PointMapper의 namespace를 org.kosa.myproject.mapper.PointMapper로 변경 -->
+<mapper namespace="org.kosa.myproject.mapper.PointMapper">
+    <!-- findPointById: point_tx_id를 기준으로 찾도록 변경 (Integer 타입) -->
+    <select id="findPointById" parameterType="int" resultType="org.kosa.myproject.domain.Point">
+        SELECT point_tx_id, member_id, point, point_type FROM point_tx WHERE point_tx_id = #{value}
+    </select>
+
+    <!-- register: point_tx_id는 AUTO_INCREMENT이므로 insert 시 명시하지 않고, keyProperty와 useGeneratedKeys를 사용하여 생성된 id를 Point 객체에 설정 -->
+    <!-- parameterType과 resultType을 org.kosa.myproject.domain.Point로 변경 -->
+    <insert id="register" parameterType="org.kosa.myproject.domain.Point" useGeneratedKeys="true" keyProperty="pointTxId">
+        INSERT INTO point_tx(member_id, point, point_type) VALUES(#{memberId}, #{point}, #{pointType})
+    </insert>
+</mapper>

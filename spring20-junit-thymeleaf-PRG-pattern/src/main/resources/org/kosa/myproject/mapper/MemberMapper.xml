@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosa.myproject.mapper.MemberMapper">
+    <!-- findMemberById: id가 Integer 타입이므로 parameterType도 int로 변경 -->
+    <select id="findMemberById" parameterType="int" resultType="org.kosa.myproject.domain.Member">
+        SELECT id, password, name, address FROM member_tx WHERE id = #{value}
+    </select>
+
+    <select id="getTotalMemberCount" resultType="int">
+        SELECT count(*) FROM member_tx
+    </select>
+
+    <!-- register: id는 AUTO_INCREMENT이므로 insert 시 명시하지 않고, keyProperty와 useGeneratedKeys를 사용하여 생성된 id를 Member 객체에 설정 -->
+    <insert id="register" parameterType="org.kosa.myproject.domain.Member" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO member_tx(password, name, address) VALUES(#{password}, #{name}, #{address})
+    </insert>
+</mapper>

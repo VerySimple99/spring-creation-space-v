@@ -6,6 +6,6 @@
 </head>
 <body>
     <h1>파라미터 테스트 결과</h1>
-    <p>나이 분류: <span th:text="${type}"></span></p>
+    나이 분류:<span th:text="${param.age}+'세'">  나이</span> <span th:text="${type}"></span><span th:text="|${param.age}세|"></span>
 </body>
 </html>

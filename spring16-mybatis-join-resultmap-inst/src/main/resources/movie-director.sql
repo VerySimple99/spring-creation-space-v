@@ -53,7 +53,7 @@ COMMIT;
 -- 감독 데이터 삽입
 INSERT INTO director (director_name, intro) VALUES 
 ('봉준호', '기생충, 설국열차로 유명한 한국의 세계적 감독'),
-('박찬욱', '올드보이, 아가씨로 유명한 스타일리시한 감독'),
+('박찬욱', '헤어질 결심, 올드보이, 아가씨로 유명한 스타일리시한 감독'),
 ('최동훈', '도둑들, 암살로 유명한 블록버스터 감독');
 
 -- 영화 데이터 삽입
@@ -163,4 +163,17 @@ WHERE m.title LIKE '%기생%'   -- '기생'이 포함된 영화
         INNER JOIN director d ON m.director_id = d.director_id
         ORDER BY m.movie_id ASC  
    
-   
+        
+        
+        
+       SELECT 
+        d.director_id as directorId,
+        d.director_name as directorName,
+        SUM(m.attendance) as totalAttendance,
+        ROUND(AVG(m.attendance), 0) as averageAttendance
+    FROM director d
+    INNER JOIN movie m ON d.director_id = m.director_id
+    GROUP BY d.director_id,d.director_name
+    ORDER BY totalAttendance DESC
+    
+    -- (director_id, director_name) 쌍을 기준으로 그룹을 만들고 있다

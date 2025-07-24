@@ -39,7 +39,7 @@ public class MemberController {
         // 반환값: 뷰 이름 (타임리프 템플릿 파일명)
         // ViewResolver가 "/member/member-test"를 해석하여
         // "src/main/resources/templates/member/member-test.html" 파일을 찾아 렌더링
-        return "/member/member-test";
+        return "member/member-test";
         
         // 주의: 앞의 "/"는 생략 가능 ("member/member-test"와 동일)
     }
@@ -47,6 +47,12 @@ public class MemberController {
     /**
      * === 파라미터 처리와 모델 데이터 전달 ===
      * Spring MVC와 타임리프의 핵심 연동 패턴
+     * 
+     *     @GetMapping("/search")
+    public String searchFruit(
+            @RequestParam(value = "name", required = false) String fruitName,
+            @RequestParam(value = "minPrice", defaultValue = "0") int minPrice,
+            Model model) {
      */
     @GetMapping("/find-by-id")  // URL: /member/find-by-id?memberId=값
     public String findMemberById(

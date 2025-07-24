@@ -23,9 +23,9 @@ MovieMapper XML - JOIN 쿼리와 중첩 객체 매핑의 핵심 예제
     <resultMap id="movieWithDirectorResultMap" type="org.kosa.myproject.domain.Movie">
         <!-- Movie 객체의 기본 필드들 -->
         <id property="movieId" column="movie_id" />
-        <result property="title" column="title" />
+       <result property="title" column="title" />
         <result property="genre" column="genre" />
-        <result property="attendance" column="attendance" />
+        <result property="attendance" column="attendance" /><!--   -->
         
         <!-- 
         Association: Movie 객체 내부의 Director 객체 매핑

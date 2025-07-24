@@ -2,20 +2,19 @@ package org.kosta.myproject.controller;
 
 import org.kosta.myproject.model.mapper.CustomerMapper;
 import org.kosta.myproject.model.vo.CustomerVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
+
 public class CustomerController {
 	private CustomerMapper customerMapper;
-	@Autowired	
 	public CustomerController(CustomerMapper customerMapper) {
 		super();
 		this.customerMapper = customerMapper;
 	}
-	@PostMapping("redirectTest")
+	@PostMapping("/redirectTest")
 	public String registerCustomer(CustomerVO customerVO) {
 		//기존 db에 id가 존재하면 ( 아이디가 중복되면 ) 
 		if(customerMapper.checkDuplicateId(customerVO.getId())>0) {
@@ -30,7 +29,7 @@ public class CustomerController {
 		//응답받도록 한다  
 		return "redirect:registerResult?customerId="+customerVO.getId();
 	}
-	@RequestMapping("registerResult")
+	@GetMapping("registerResult")
 	public String registerResult(String customerId,Model model) {
 		//System.out.println("registerResult id:"+customerId);
 		//System.out.println("registerResult 가 forward 방식으로 result8 html을 응답");

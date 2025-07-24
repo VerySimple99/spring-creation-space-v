@@ -43,7 +43,7 @@ public class MyBatisStudyMovieRunner implements CommandLineRunner {
 	//		testCount();
 			
 			// 2단계: JOIN 쿼리 테스트 (핵심!)
-	//	testFindById();
+		testFindById();
 	//	testFindAll();
 //			
 //			
@@ -96,7 +96,7 @@ public class MyBatisStudyMovieRunner implements CommandLineRunner {
 			logger.info("  영화 ID: {}", movie.getMovieId());
 			logger.info("  영화 제목: {}", movie.getTitle());
 			logger.info("  장르: {}", movie.getGenre());
-			logger.info("  관객수: {:,}명", movie.getAttendance());
+			logger.info("  관객수: {}명", movie.getAttendance());
 			
 			// 중첩 객체 확인 - 핵심 포인트!
 			Director director = movie.getDirector();

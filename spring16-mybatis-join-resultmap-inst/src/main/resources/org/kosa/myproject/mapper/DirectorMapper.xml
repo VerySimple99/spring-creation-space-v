@@ -110,7 +110,7 @@ MyBatis XML Mapper 파일
         ROUND(AVG(m.attendance), 0) as averageAttendance
     FROM director d
     INNER JOIN movie m ON d.director_id = m.director_id
-    GROUP BY d.director_id, d.director_name
+    GROUP BY d.director_id
     ORDER BY totalAttendance DESC
 </select> 
 </mapper>

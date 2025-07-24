@@ -5,7 +5,15 @@
     <title>회원 정보 조회 실패</title>
 </head>
 <body>
-    <h1>회원 정보 조회 실패</h1>
-    <p>해당하는 회원 정보가 없습니다.</p>
+<!--     <h1>회원 정보 조회 실패</h1>
+    <p>해당하는 회원 정보가 없습니다.</p> -->
+    <!--/*  
+    	타임리프 주석 // 런타임에 Thymeleaf가 이 부분을 실제 값으로 대체
+    */-->
+    <script type="text/javascript" th:inline="javascript">
+    var memberId = null; // IDE를 위한 초기값 설정
+    /*[[memberId = ${param.memberId};]]*/ 
+        alert("회원 ID: " + memberId);
+    </script>
 </body>
 </html>

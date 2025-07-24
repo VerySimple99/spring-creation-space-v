@@ -1,29 +1,29 @@
 package org.kosta.myproject.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.kosta.myproject.model.vo.CustomerVO;
 import org.kosta.myproject.model.vo.UserVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MyTestController {
-	@RequestMapping("hello")
+	@GetMapping("hello")
 	public String hello(Model model) {
 		model.addAttribute("info1", "대한민국");
 		model.addAttribute("info2", "포르투칼");
 		return "result1";
 	}
-	@RequestMapping("hi")
+	@GetMapping("hi")
 	public String hi(Model model) {
 		model.addAttribute("message", "대한민국 16강 진출");
 		return "result2";
 	}
-	@RequestMapping("paramTest1")
+	@GetMapping("paramTest1")
 	public String paramTest1(String customerId,String customerName) {
 		System.out.println(customerId+" "+customerName);
 		return "result3";
@@ -54,14 +54,14 @@ public class MyTestController {
 		model.addAttribute("userVO", userVO);
 		return "result7";
 	}	
-	@RequestMapping("sessionTest0")
+	@GetMapping("sessionTest0")
 	// HandlerAdapter 가 session이 존재하지 않으면 새로 생성해서 전달 ,
 	// 기존 session이 있으면 기존 세션 전달 
 	public String sessionTest0(HttpSession session) {	
 		System.out.println("session 객체를 전달받을 수 있다 "+session);		
 		return "result9";// view name 
 	}
-	@RequestMapping("sessionTest")
+	@GetMapping("sessionTest")
 	// HandlerAdapter 가 session이 존재하지 않으면 새로 생성해서 전달 ,
 	// 기존 session이 있으면 기존 세션 전달하고  vo 를 할당  
 	public String sessionTest(HttpSession session) {	
@@ -69,7 +69,7 @@ public class MyTestController {
 		session.setAttribute("customerVO", new CustomerVO("java","아이유","오리"));
 		return "result9";// view name 
 	}
-	@RequestMapping("sessionTest2")
+	@GetMapping("sessionTest2")
 	public String sessionTest2(HttpServletRequest request,Model model) {
 		HttpSession session=request.getSession(false); // 기존 세션이 없으면 null 반환 
 		String checkMessage=null;

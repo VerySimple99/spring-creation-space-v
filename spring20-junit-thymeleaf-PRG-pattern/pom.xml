@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.kosa</groupId>
-	<artifactId>spring20-junit-thymeleaf-PRG-pattern</artifactId>
+	<artifactId>spring21-service-aop-transaction-inst</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring19-junit-thymeleaf-PRG-pattern</name>
 	<description>Demo project for Spring Boot</description>
@@ -66,6 +66,7 @@
 			<version>3.0.4</version>
 			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
 
 	<build>
