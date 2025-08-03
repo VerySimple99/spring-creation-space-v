@@ -1,0 +1,207 @@
+<!-- templates/accounts/list.html - Bootstrap 4 기반 계좌 목록 및 등록 폼 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>계좌 관리 - PRG Pattern 실습</title>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body class="bg-light">
+    
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+           <span class="navbar-brand">
+    <a href="/" class="text-white">계좌 관리 시스템</a>
+</span>
+            <span class="navbar-text">
+                PRG Pattern 실습 - Spring Boot + Thymeleaf
+            </span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 고객 정보 카드 -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-user mr-2"></i>고객 정보
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                
+                    <div class="col-md-4">                    
+                        <strong>고객 ID:</strong> <span  class="badge badge-primary"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>고객명:</strong> <span ></span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>이메일:</strong> <span ></span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <!-- 새 계좌 등록 카드 -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-plus-circle mr-2"></i>새 계좌 등록
+                </h5>
+            </div>
+            <div class="card-body">
+            <form th:action="@{/accounts/register}" method="post">
+    <!-- 숨겨진 필드로 고객 ID 전달 -->
+    <input type="hidden" name="customerId" th:value="${customer.customerId}">
+    
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <label for="accountType">계좌 유형</label>
+            <select class="form-control" id="accountType" name="accountType" required>
+                <option value="">-- 계좌 유형 선택 --</option>
+                <option value="입출금계좌">💳 입출금계좌</option>
+                <option value="예적금계좌">💰 예적금계좌</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="balance">초기 잔액</label>
+            <input type="number" class="form-control" id="balance" name="balance" 
+                   min="0" step="1000" placeholder="예: 10000" required>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">
+        <i class="fas fa-save mr-1"></i>계좌 등록
+    </button>
+</form>
+            </div>
+        </div>
+        
+        <!-- 계좌 목록 카드 -->
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-list mr-2"></i>보유 계좌 목록
+                </h5>
+            </div>
+            <div class="card-body">
+                
+                <!-- 계좌가 없는 경우 -->
+                <div th:if="${#lists.isEmpty(accountList)}" class="text-center py-5">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">등록된 계좌가 없습니다</h5>
+                    <p class="text-muted">위 폼을 사용하여 첫 번째 계좌를 등록해보세요!</p>
+                </div>
+                
+                <!-- 계좌가 있는 경우 테이블 -->
+                <div th:if="${not #lists.isEmpty(accountList)}">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th><i class="fas fa-hashtag mr-1"></i>계좌번호</th>
+                                    <th><i class="fas fa-tags mr-1"></i>계좌유형</th>
+                                    <th><i class="fas fa-coins mr-1"></i>잔액</th>
+                                    <th><i class="fas fa-calendar mr-1"></i>개설일시</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="account : ${accountList}">
+                                    <td>
+                                        <span class="badge badge-info" th:text="${account.accountNumber}"></span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-outline-primary" th:text="${account.accountType}"></span>
+                                    </td>
+                                    <td class="text-primary font-weight-bold">
+                                        <span th:text="${#numbers.formatInteger(account.balance, 0, 'COMMA')} + '원'"></span>
+                                    </td>
+                                    <td class="text-muted">
+                                        <span th:text="${#temporals.format(account.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 요약 정보 -->
+                    <div class="alert alert-info mt-3">
+                        <div class="row text-center">
+                            <div class="col-md-6">
+                                <strong>
+                                    <i class="fas fa-list-ol mr-1"></i>총 계좌 수: 
+                                    <span class="badge badge-primary" th:text="${#lists.size(accountList)}"></span>개
+                                </strong>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>
+                                    <i class="fas fa-calculator mr-1"></i>총 잔액: 
+                                    <!--/*  아래 타임리프 표현식 설명은 파일 맨 아래에 있음   */-->
+                                    <span class="text-primary" th:text="${#numbers.formatInteger(#aggregates.sum(accountList.![balance]), 0, 'COMMA')} + '원'"></span>
+                                    
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PRG Pattern 설명 -->
+        <div class="alert alert-light mt-4 border">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-info-circle mr-1"></i>PRG Pattern 실습</h6>
+                    <small>POST (계좌등록) → Redirect → GET (목록조회)</small>
+                </div>
+                <div class="col-md-6">
+                    <h6><i class="fas fa-sync-alt mr-1"></i>새로고침 테스트</h6>
+                    <small>새로고침을 해도 중복 등록되지 않습니다!</small>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+  <!--/* 
+  <span class="text-primary" th:text="${#numbers.formatInteger(#aggregates.sum(accountList.![balance]), 0, 'COMMA')} + '원'"></span>
+  <!-- 1단계: accountList.![balance] - Selection Expression (선택 표현식) -->
+<!-- 
+accountList.![balance]의 의미:
+- accountList: List<Account> 객체 (컨텍스트에서 전달된 계좌 목록)
+- .![field]: Thymeleaf Selection Expression (각 요소에서 특정 필드만 추출)
+- balance: Account 객체의 balance 필드
+
+결과: [1000.00, 50000.00, 750.00, 20.00] 같은 BigDecimal 리스트
+-->
+
+<!-- 2단계: #aggregates.sum() - 집계 함수 -->
+<!--
+#aggregates.sum(accountList.![balance])의 의미:
+- #aggregates: Thymeleaf의 내장 집계 유틸리티 객체
+- .sum(): 컬렉션의 모든 숫자 값을 합산
+- 위에서 추출한 balance 리스트의 총합 계산
+
+결과: BigDecimal 타입의 총 잔액 (예: 51770.00)
+-->
+
+<!-- 3단계: #numbers.formatInteger() - 숫자 포맷팅 -->
+<!--
+#numbers.formatInteger(총잔액, 0, 'COMMA')의 의미:
+- #numbers: Thymeleaf의 내장 숫자 포맷팅 유틸리티 객체
+- .formatInteger(): 정수 형태로 포맷팅
+- 첫 번째 파라미터: 포맷팅할 숫자 (총잔액)
+- 두 번째 파라미터: 0 (소수점 자리수 - 0은 정수로 표시)
+- 세 번째 파라미터: 'COMMA' (천 단위 구분자 사용)
+
+결과: "51,770" (콤마가 포함된 문자열)
+-->
+  
+   */-->
+</html>

@@ -20,13 +20,13 @@
 		 주석으로 감싸기 /* [[${변수}]] */ "로컬에서 실행시 값"
 
  [[${param.id}]] [[${param.name}]] */-->
-<!-- <script type="text/javascript" th:inline="javascript">
+<script type="text/javascript" th:inline="javascript">
  	let memId=/*[[${param.id}]]*/ "회원아이디" ;
  	let memName=/*[[${param.name}]]*/   "회원명";
 	alert("js test "+memId+" "+memName);
 	location.href="/";
-</script> -->
-<script type="text/javascript" src="" th:src="@{/js/test.js}"></script>
+</script>
+
 </div>
 </body>
 </html>

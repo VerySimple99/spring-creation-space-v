@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오류 발생 - 계좌 관리 시스템</title>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body class="bg-light d-flex align-items-center" style="min-height: 100vh;">
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-danger text-white text-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>오류 발생
+                        </h4>
+                    </div>
+                    <div class="card-body text-center">
+                        
+                        <!-- 오류 아이콘 -->
+                        <div class="mb-4">
+                            <i class="fas fa-times-circle text-danger" style="font-size: 4rem;"></i>
+                        </div>
+                        
+                        <!-- 오류 메시지 -->
+                        <div class="alert alert-danger" role="alert">
+                            <strong>오류 내용:</strong><br>
+                            <span th:text="${errorMessage ?: '알 수 없는 오류가 발생했습니다.'}"></span>
+                        </div>
+                        
+                        <!-- 설명 -->
+                        <p class="text-muted mb-4">
+                            요청하신 작업을 처리하는 중에 문제가 발생했습니다.<br>
+                            문제가 지속되면 시스템 관리자에게 문의해주세요.
+                        </p>
+                        
+                        <!-- 액션 버튼들 -->
+                        <div class="btn-group" role="group">
+                            <a href="/" class="btn btn-primary">
+                                <i class="fas fa-home mr-1"></i>홈으로
+                            </a>
+                            <a href="javascript:history.back()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left mr-1"></i>이전 페이지
+                            </a>
+                        </div>
+                        
+                    </div>
+                    <div class="card-footer text-muted text-center">
+                        <small>
+                            <i class="fas fa-info-circle mr-1"></i>
+                            PRG Pattern 실습 - 오류 처리도 사용자 친화적으로!
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 4 JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

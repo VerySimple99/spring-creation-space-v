@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosa.myproject.mapper.AccountMapper">
+	<!-- ResultMap 정의: Account와 Customer 조인 결과 매핑 -->
+	<resultMap id="AccountWithCustomerMap" type="org.kosa.myproject.domain.Account">
+			 <!-- Has-a 관계: Customer 객체 매핑 (Dot Notation 방식) -->
+        <result property="customer.customerId" column="customer_id"/>
+        <result property="customer.name" column="name"/>
+        <result property="customer.email" column="email"/>
+	</resultMap>
+
+	<!-- 계좌 등록 -->
+	<insert id="register" parameterType="org.kosa.myproject.domain.Account"
+		useGeneratedKeys="true" keyProperty="accountNumber">
+		INSERT INTO account (customer_id, account_type, balance)
+		VALUES (#{customerId}, #{accountType}, #{balance})
+	</insert>
+
+	<!-- 고객 ID로 계좌 목록 조회 (고객 정보 포함) -->
+	<select id="findAccountListByCustomerId" parameterType="Long"
+		resultMap="AccountWithCustomerMap">
+		SELECT a.account_number,
+		a.customer_id,
+		a.account_type,
+		a.balance,
+		a.created_at,
+		c.name,
+		c.email
+		FROM account a
+		INNER JOIN customer c ON a.customer_id = c.customer_id
+		WHERE a.customer_id = #{customerId}
+		ORDER BY a.account_number
+	</select>
+
+	<!-- 계좌번호로 특정 계좌 조회 -->
+	<select id="findByAccountNumber" parameterType="Long"
+		resultMap="AccountWithCustomerMap">
+		SELECT a.account_number,
+		a.customer_id,
+		a.account_type,
+		a.balance,
+		a.created_at,
+		c.name,
+		c.email
+		FROM account a
+		INNER JOIN customer c ON a.customer_id = c.customer_id
+		WHERE a.account_number = #{accountNumber}
+	</select>
+	<!-- 계좌 잔액 업데이트 -->
+<update id="updateBalance">
+    UPDATE account 
+    SET balance = #{newBalance}
+    WHERE account_number = #{accountNumber}
+</update>
+
+<!-- 계좌 잔액만 조회 (이체 전 잔액 확인용) -->
+<select id="getBalanceByAccountNumber" parameterType="Long" resultType="java.math.BigDecimal">
+    SELECT balance 
+    FROM account 
+    WHERE account_number = #{accountNumber}
+</select>
+</mapper>
