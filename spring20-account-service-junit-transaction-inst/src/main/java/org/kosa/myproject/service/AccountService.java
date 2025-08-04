@@ -47,37 +47,31 @@ public class AccountService {
         // 고객 존재 여부 확인
         if (customerMapper.findById(account.getCustomerId()) == null) {
             throw new RuntimeException("존재하지 않는 고객입니다. 고객 ID: " + account.getCustomerId());
-        }
-        
+        }        
         // 계좌 등록 수행
-        int result = accountMapper.register(account);
-        
+        int result = accountMapper.register(account);        
         if (result != 1) {
             throw new RuntimeException("계좌 등록에 실패했습니다.");
-        }
-        
+        }        
         return account;  // 등록 후 생성된 계좌번호가 포함된 객체 반환
     }
     
     /**
      * 고객별 계좌 목록 조회
-     * - 고객의 모든 계좌를 고객 정보와 함께 조회
-     * - PRG Pattern의 GET 단계에서 주로 사용
-     * 
-     * @param customerId 조회할 고객 ID
+     * 고객의 모든 계좌를 고객 정보와 함께 조회   
+
+     * @param customerId 
      * @return 해당 고객의 계좌 목록 (고객 정보 포함)
      */
     @Transactional(readOnly = true)
     public List<Account> getAccountListByCustomerId(Long customerId) {
         if (customerId == null || customerId <= 0) {
             throw new IllegalArgumentException("올바른 고객 ID를 입력해주세요.");
-        }
-        
+        }        
         // 고객 존재 여부 확인
         if (customerMapper.findById(customerId) == null) {
             throw new RuntimeException("존재하지 않는 고객입니다. 고객 ID: " + customerId);
-        }
-        
+        }        
         return accountMapper.findAccountListByCustomerId(customerId);
     }
     
@@ -103,22 +97,13 @@ public class AccountService {
     private void validateAccountInput(Account account) {
         if (account == null) {
             throw new IllegalArgumentException("계좌 정보가 없습니다.");
-        }
-        
+        }        
         if (account.getCustomerId() == null || account.getCustomerId() <= 0) {
             throw new IllegalArgumentException("올바른 고객 ID를 입력해주세요.");
-        }
-        
+        }        
         if (account.getAccountType() == null || account.getAccountType().trim().isEmpty()) {
             throw new IllegalArgumentException("계좌 유형을 선택해주세요.");
-        }
-        
-        // 계좌 유형 검증
-        if (!"입출금계좌".equals(account.getAccountType()) && 
-            !"예적금계좌".equals(account.getAccountType())) {
-            throw new IllegalArgumentException("올바른 계좌 유형을 선택해주세요. (입출금계좌 또는 예적금계좌)");
-        }
-        
+        }        
         if (account.getBalance() == null || account.getBalance().compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("잔액은 0 이상이어야 합니다.");
         }

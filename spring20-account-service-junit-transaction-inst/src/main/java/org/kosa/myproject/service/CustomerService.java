@@ -40,22 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 일관성 유지 및 동시성 제어 🤝
 비록 단일 쿼리라도, 트랜잭션은 해당 작업이 다른 동시성 요청으로부터 격리(isolation)되도록 보장합니다. 이를 통해 데이터의 일관성을 유지하고, 예상치 못한 동시성 문제를 방지할 수 있습니다.
  * 
- * 
- ****AOP를 통한 트랜잭션 동작 방식****
- * 스프링 프레임워크는 **프록시(Proxy)**라는 기술을 이용해 AOP 방식으로 트랜잭션을 관리해요.
 
-AOP를 통한 트랜잭션 동작 방식
-프록시 객체 생성: 스프링은 @Transactional 어노테이션이 붙은 클래스에 대해 프록시(가짜) 객체를 만듭니다. 이 프록시 객체가 실제 비즈니스 로직을 담고 있는 객체를 대신하여 클라이언트의 요청을 받아요.
-
-프록시를 통한 요청 가로채기: 클라이언트가 @Transactional 메소드를 호출하면, 요청은 실제 객체가 아닌 프록시 객체로 먼저 전달됩니다.
-
-트랜잭션 부가 기능 적용: 프록시 객체는 요청을 가로챈 후, 스프링이 제공하는 **PlatformTransactionManager**를 사용하여 트랜잭션 시작, 커밋(commit), 롤백(rollback)과 같은 부가 기능을 먼저 수행합니다.
-
-실제 비즈니스 로직 호출: 트랜잭션이 성공적으로 시작되면, 프록시는 그제서야 실제 객체의 메소드를 호출하여 비즈니스 로직을 실행해요.
-
-트랜잭션 종료: 비즈니스 로직이 모두 성공적으로 완료되면 프록시는 트랜잭션을 커밋하고, 만약 예외가 발생하면 트랜잭션을 롤백합니다.
-
-이러한 방식 덕분에 우리는 비즈니스 로직 코드에 트랜잭션 처리 코드를 직접 작성하지 않아도, @Transactional 어노테이션 하나만으로 깔끔하게 트랜잭션을 관리할 수 있습니다. 이것이 바로 관점 지향 프로그래밍(AOP)의 핵심이죠. 😊
+ * 스프링 프레임워크는 **프록시(Proxy)**라는 기술을 이용해 AOP 방식으로 트랜잭션을 관리
  * 
  */
 @Service
@@ -79,16 +65,29 @@ public class CustomerService {
      */
     public Customer registerCustomer(Customer customer) {
         // 입력값 검증
-        validateCustomerInput(customer);
-        
+        validateCustomerInput(customer);        
         // 고객 등록 수행
-        int result = customerMapper.register(customer);
-        
+        int result = customerMapper.register(customer);        
         if (result != 1) {
             throw new RuntimeException("고객 등록에 실패했습니다.");
-        }
-        
+        }        
         return customer;  // 등록 후 생성된 ID가 포함된 객체 반환
+    }
+    /**
+     * 고객 입력값 검증 private 메서드
+     * - 이름과 이메일 필수값 체크
+     * - 이메일 형식 간단 검증
+     */
+    private void validateCustomerInput(Customer customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("고객 정보가 없습니다.");
+        }        
+        if (customer.getName() == null || customer.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("고객명을 입력해주세요.");
+        }        
+        if (customer.getEmail() == null || customer.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일을 입력해주세요.");
+        } 
     }
     
     /**
@@ -102,40 +101,12 @@ public class CustomerService {
      *  영속성 프레임워크와 데이터베이스가 쓰기 작업에 필요한 모든 부가적인 작업을 건너뛰고 
      *  오직 읽기 작업에만 집중하게 만들어 성능을 향상시키는 효과
      *  또한 읽기 전용이라는 명확한 의도를 전달로 가독성 향상 
-     * 
-     * 
-     * 
      */
     @Transactional(readOnly = true)  // 조회 전용 트랜잭션 (성능 최적화)
     public Customer getCustomerById(Long customerId) {
         if (customerId == null || customerId <= 0) {
             throw new IllegalArgumentException("올바른 고객 ID를 입력해주세요.");
-        }
-        
+        }        
         return customerMapper.findById(customerId);
-    }
-    
-    /**
-     * 고객 입력값 검증 private 메서드
-     * - 이름과 이메일 필수값 체크
-     * - 이메일 형식 간단 검증
-     */
-    private void validateCustomerInput(Customer customer) {
-        if (customer == null) {
-            throw new IllegalArgumentException("고객 정보가 없습니다.");
-        }
-        
-        if (customer.getName() == null || customer.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("고객명을 입력해주세요.");
-        }
-        
-        if (customer.getEmail() == null || customer.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("이메일을 입력해주세요.");
-        }
-        
-        // 간단한 이메일 형식 검증
-        if (!customer.getEmail().contains("@")) {
-            throw new IllegalArgumentException("올바른 이메일 형식을 입력해주세요.");
-        }
     }
 }

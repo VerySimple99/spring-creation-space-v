@@ -56,7 +56,7 @@ class CustomerMapperTest {
         
         // When: 고객 등록 실행
         int result = customerMapper.register(customer);
-        
+        // import static org.junit.jupiter.api.Assertions.assertEquals;
         // Then: 결과 검증
         assertEquals(1, result, "등록된 행의 수는 1이어야 함");
         assertNotNull(customer.getCustomerId(), "등록 후 고객 ID가 생성되어야 함");

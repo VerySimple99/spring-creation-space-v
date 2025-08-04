@@ -71,13 +71,12 @@ class AccountServiceTransactionTest {
     }
 
     /**
-     * 정상적인 계좌 이체 테스트
+     *  계좌 이체 테스트
      * - 충분한 잔액으로 이체 실행 후 결과 확인
      */
     @Test
     void testTransferMoneySuccess() {
-        // Given: 출금용 계좌와 입금용 계좌 번호   
-          
+        // Given: 출금용 계좌와 입금용 계좌 번호             
         Long fromAccountNumber = 37L; // 현재 8만원
         Long toAccountNumber = 1L; // 현재 천원 
         
