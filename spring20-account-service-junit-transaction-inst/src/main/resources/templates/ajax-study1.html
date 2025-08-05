@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajax Basic</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container mt-5">
+		<form>
+			<input type="text" id="userId" required="required"
+				placeholder="고객아이디">
+			<button type="button" onclick="startAjax()">Ajax 테스트</button>			
+		<br>
+		<br>
+		<textarea rows="10" cols="50" placeholder="본문내용"></textarea>
+		</form>
+		<br><br>
+			<!--/*    ajax 응답결과를 아래 div 에 보여줄 예정  */-->
+			<div id="result"></div>
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="/js/ajax-study1-fetch-version.js"></script>
+	</div>
+</body>
+</html>
+<!--/*  
+		javascript 상에서 thymeleaf 변수를 사용하기 
+		1. <script type="text/javascript" th:inline="javascript">
+		2. editor에서 error를 발생시키면  [[${변수}]]  를
+		 주석으로 감싸기 /* [[${변수}]] */ "로컬에서 실행시 값"
+
+ [[${param.id}]] [[${param.name}]] 
+<script type="text/javascript" th:inline="javascript">
+
+*/-->
