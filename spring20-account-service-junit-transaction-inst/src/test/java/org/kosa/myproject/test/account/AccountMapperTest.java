@@ -20,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional  // 테스트 후 자동 롤백
 class AccountMapperTest {
-
     @Autowired
-    private AccountMapper accountMapper;
-    
+    private AccountMapper accountMapper;    
     @Autowired
     private CustomerMapper customerMapper;
     
@@ -32,8 +30,14 @@ class AccountMapperTest {
     /**
      * 각 테스트 실행 전 공통 준비 작업
      * 테스트용 고객 생성
-     * @BeforeEach  각 테스트 메소드 실행 전에 호출되는 메소드
+     * @BeforeEach 설정 의미 :  각 테스트 메소드 실행 전에 호출되는 메소드
+     * 										   계좌(자식테이블) 기능 테스트를 위해서는 계좌주 정보(부모테이블)가 반드시 존재해야 함
+     * 										    @BeforeEach 설정을 이용하면 각 계좌 기능 테스트 실행 전에 @BeforeEach 가 명시된 
+     * 											메서드를 먼저 실행하여 테스트를 위한 계좌주 정보를 우선적으로 저장한 후 
+     *                                         그 계좌주 정보의 생성된 customerId 를 인스턴스 변수에 할당하고 이를 기반으로 
+     *                                         계좌의 각 기능을 테스트 할 수 있도록 지원한다  	
      */
+    ////////여기에 설정/////////
     @BeforeEach
     void setUp() {
         // 테스트용 고객 생성
@@ -95,6 +99,6 @@ class AccountMapperTest {
         assertEquals(originalBalance, balance, "원래 잔액과 일치해야 함");        
         System.out.println("조회된 잔액: " + accountNumber + " -> " + balance);
     }
-
-    
+    // 이후 각 계좌 기능을 테스트 해본다 
+       
 }

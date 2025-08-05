@@ -45,3 +45,26 @@ INSERT INTO account (customer_id, account_type, balance) VALUES
 COMMIT
 
 SELECT * FROM customer;
+-- 계좌 이체를 통한 트랜잭션 테스트를 위한 조회
+/*
+    계좌 번호 1 번 손흥민 입출금계좌 1000원
+    계좌 번호 3 번 이강인 입출금계좌 750원
+*/    
+SELECT a.account_number,
+			c.name,
+			a.account_type,
+			a.balance
+FROM account a
+INNER JOIN customer
+c ON a.customer_id = c.customer_id
+ORDER BY a.account_number
+
+
+
+
+
+
+
+
+
+

@@ -8,11 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.kosa.myproject.domain.Account;
 
-/**
- * 계좌 정보 관련 데이터베이스 접근 인터페이스
- * - 계좌 등록 및 조회 기능 제공
- * - 고객별 계좌 목록 조회가 핵심 기능
- */
+
 @Mapper
 public interface AccountMapper {
     
@@ -25,20 +21,17 @@ public interface AccountMapper {
     
     /**
      * 고객 ID로 해당 고객의 모든 계좌 목록 조회
-     * - 고객 정보까지 함께 조회 (JOIN 사용)
-     * - PRG Pattern에서 GET 단계에 사용
-     * 
      * @param customerId 조회할 고객 ID
      * @return 해당 고객의 계좌 목록 (고객 정보 포함)
      */
-    List<Account> findAccountListByCustomerId(@Param("customerId") Long customerId);
+    List<Account> findAccountListByCustomerId(Long customerId);
     
     /**
-     * 계좌번호로 특정 계좌 조회 (향후 입출금 기능에서 사용 예정)
+     * 계좌번호로 특정 계좌 조회 (향후 입출금, 계좌이체 기능에서 사용 예정)
      * @param accountNumber 조회할 계좌번호
      * @return 계좌 정보 (고객 정보 포함, 없으면 null)
      */
-    Account findByAccountNumber(@Param("accountNumber") Long accountNumber);
+    Account findByAccountNumber(Long accountNumber);
     
     /**
      * 계좌 잔액 업데이트 (계좌 이체용)
@@ -59,5 +52,5 @@ public interface AccountMapper {
      * @param accountNumber 조회할 계좌번호
      * @return 현재 잔액 (계좌가 없으면 null)
      */
-    BigDecimal getBalanceByAccountNumber(@Param("accountNumber") Long accountNumber);
+    BigDecimal getBalanceByAccountNumber(Long accountNumber);
 }

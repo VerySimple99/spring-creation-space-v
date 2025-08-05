@@ -1,4 +1,4 @@
-// Account.java - 계좌 도메인 클래스  
+// Account.java 계좌 도메인 클래스  
 package org.kosa.myproject.domain;
 
 import java.math.BigDecimal;
