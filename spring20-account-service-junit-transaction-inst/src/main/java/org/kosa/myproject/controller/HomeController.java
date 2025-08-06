@@ -13,4 +13,12 @@ public class HomeController {
 	public String ajaxStudy() {
 		return "ajax-study1";
 	}
+	@GetMapping("/ajax-study2")
+	public String ajaxStudy2() {
+		return "ajax-study2-jquery";
+	}
+	@GetMapping("/ajax-study3")
+	public String ajaxStudy3() {
+		return "ajax-study3-fetch";
+	}
 }

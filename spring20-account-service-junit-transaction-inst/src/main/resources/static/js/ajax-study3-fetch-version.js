@@ -16,7 +16,7 @@ async function startAjax() {
     
     try {
         // Fetch API를 사용한 GET 요청
-        const response = await fetch(`/test-ajax1?userId=${userId}`);
+        const response = await fetch(`/test-ajax3?userId=${userId}`);
         
         // 응답 상태가 정상이 아니면 에러를 발생시킴
         if (!response.ok) {
