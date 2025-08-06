@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<title>Ajax Study6 - Thymeleaf with Fetch API</title>
+</head>
+<body>
+<div class="container pt-4">
+<!-- Thymeleaf와 모던 JavaScript fetch API를 결합한 Ajax 예제 -->
+<h4>Modern JavaScript Ajax with Thymeleaf Template</h4>
+
+<button id="listBtn">상품리스트 (Thymeleaf 방식)</button>
+<br><br>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>        
+            <th>NO</th>
+            <th>NAME</th>
+            <th>MAKER</th>
+            <th>PRICE</th>
+        </tr>
+    </thead>
+    <!-- 
+    Thymeleaf 템플릿으로 초기 렌더링된 tbody
+    서버에서 productList가 없으면 빈 상태로 표시됨 
+    -->
+	 <tbody id="productTbody">
+	 <tr th:each="product:${productList}">
+	 <td th:text="${product.productNo}"></td>
+	 <td th:text="${product.name}"></td>
+	 <td th:text="${product.maker}"></td>
+	 <td th:text="${product.price}"></td>
+	 </tr>
+	</tbody>
+</table>
+
+<script>
+// DOM 로딩 완료 후 이벤트 바인딩
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // 상품 리스트 버튼에 이벤트 리스너 등록
+    document.getElementById('listBtn').addEventListener('click', async function() {
+                
+        try {
+            // 서버의 Thymeleaf 컨트롤러에 요청
+            // 이 컨트롤러는 HTML 조각(fragment)을 반환함
+            const response = await fetch('findAllProductList2');
+            
+            // HTTP 응답 상태 확인
+            if (!response.ok) {
+                throw new Error(`서버 오류: ${response.status} ${response.statusText}`);
+            }
+            
+            // 서버에서 반환한 HTML 조각을 텍스트로 받음
+            // Controller의 "ajax-study6-product-thymeleaf ::#productTbody"에서
+            // #productTbody 부분만 렌더링되어 전송됨
+            const htmlFragment = await response.text();
+            console.log(htmlFragment);
+            // 기존 tbody 요소를 찾음
+            const currentTbody = document.getElementById('productTbody');
+            
+            // Thymeleaf가 생성한 새로운 HTML로 교체
+            // jQuery의 replaceWith()와 동일한 기능을 vanilla JS로 구현
+            currentTbody.outerHTML = htmlFragment;
+            
+            console.log('Thymeleaf Ajax 요청 성공: 상품 목록이 업데이트되었습니다.');
+            
+        } catch (error) {
+            // 에러 발생 시 처리
+            console.error('Thymeleaf Ajax 요청 실패:', error);
+            
+            // 에러 상태를 사용자에게 표시
+            const currentTbody = document.getElementById('productTbody');
+            currentTbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center text-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        서버 연결에 실패했습니다.
+                        <br>
+                        <small>잠시 후 다시 시도해주세요.</small>
+                    </td>
+                </tr>
+            `;
+            
+        } finally {
+            //
+        }
+    });
+});
+
+/*
+=== Thymeleaf Ajax 방식의 핵심 개념 ===
+
+1. 서버 사이드 템플릿 렌더링:
+   - 서버에서 데이터와 HTML을 결합하여 완성된 HTML 조각 반환
+   - 클라이언트는 받은 HTML을 그대로 DOM에 삽입
+   - JSON 처리나 클라이언트 사이드 템플릿 엔진 불필요
+
+2. Fragment 기반 업데이트:
+   - Thymeleaf의 :: 문법으로 특정 HTML 부분만 반환
+   - "템플릿명 :: #element-id" 형태로 부분 렌더링
+   - 전체 페이지 새로고침 없이 필요한 부분만 업데이트
+
+3. 장점:
+   - 서버에서 완전한 HTML 생성으로 클라이언트 로직 단순화
+   - SEO에 유리한 서버 사이드 렌더링
+   - 복잡한 비즈니스 로직을 서버에서 처리 가능
+   - 보안: 데이터 검증과 가공을 서버에서 수행
+
+4. 단점:
+   - 서버 리소스 사용량 증가
+   - 네트워크 트래픽이 JSON 방식보다 클 수 있음
+   - 클라이언트의 동적 처리 능력 제한
+
+5. 사용 시나리오:
+   - 복잡한 데이터 구조의 테이블/리스트 표시
+   - 서버 사이드 유효성 검증 결과 반영
+   - 다국어 지원이 필요한 동적 콘텐츠
+   - SEO가 중요한 공개 페이지의 동적 업데이트
+
+6. 실무 팁:
+   - 캐시 전략 수립 (템플릿 캐싱, CDN 활용)
+   - 네트워크 최적화 (압축, 불필요한 공백 제거)
+   - 에러 페이지 fragment도 미리 준비
+   - 로딩 상태 표시로 사용자 경험 향상
+
+이 방식은 전통적인 서버 사이드 렌더링의 장점과
+Ajax의 동적 업데이트 장점을 결합한 하이브리드 접근법입니다.
+*/
+</script>
+</div>
+</body>
+</html>

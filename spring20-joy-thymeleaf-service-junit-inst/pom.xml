@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.kosa</groupId>
-	<artifactId>spring17-mvc-controller-thymeleaf-basic-inst</artifactId>
+	<artifactId>spring20-joy-thymeleaf-service-junit-inst</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring20-joy-thymeleaf-service-junit-inst</name>
 	<description>Demo project for Spring Boot</description>
@@ -66,6 +66,10 @@
 			<version>3.0.4</version>
 			<scope>test</scope>
 		</dependency>
+		        <dependency>
+        <groupId>nz.net.ultraq.thymeleaf</groupId>
+        <artifactId>thymeleaf-layout-dialect</artifactId>
+    </dependency>
 	</dependencies>
 
 	<build>

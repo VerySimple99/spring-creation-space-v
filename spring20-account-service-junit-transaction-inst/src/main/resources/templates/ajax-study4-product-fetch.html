@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<title>Ajax Study4 - Modern Fetch API</title>
+</head>
+<body>
+<div class="container pt-4">
+<!-- 모던 JavaScript fetch API를 이용한 Ajax 통신 예제 -->
+<h4>SpringBoot Modern JavaScript Ajax (Fetch API)</h4>
+
+<!-- 일반적인 fetch API 방식으로 상품수를 조회 -->
+<button id="countBtn1">ajax test1 (fetch)</button><span id="productCountView1"></span><br>
+
+<!-- Thymeleaf를 이용한 fetch API 방식으로 상품수를 조회 -->
+<button id="countBtn2">ajax test2 (fetch + Thymeleaf)</button><span id="productCountView2" th:text="${productCount}"></span><br>
+
+<script>
+// DOM 로딩 완료 후 실행 (jQuery의 ready 함수와 동일한 역할)
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // 첫 번째 버튼: 일반적인 fetch API를 이용한 Ajax 통신
+    document.getElementById('countBtn1').addEventListener('click', async function() {
+        try {
+            // fetch API를 이용하여 서버에 GET 요청을 보냄
+            // fetch는 Promise를 반환하므로 await를 사용하여 응답을 기다림
+            const response = await fetch('getProductTotalCount', {
+                method: 'GET'  // HTTP 메서드 명시 (생략 가능, 기본값은 GET)
+            });
+            
+            // 응답이 성공적인지 확인 (status code가 200-299 범위인지)
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            // 응답 본문을 텍스트로 변환 (Controller에서 String을 반환하므로)
+            const result = await response.text();
+            
+            // DOM 요소를 찾아서 결과값을 표시
+            document.getElementById('productCountView1').textContent = result;
+            
+        } catch (error) {
+            // 에러가 발생한 경우 콘솔에 로그를 남기고 사용자에게 알림
+            console.error('Ajax 요청 중 오류 발생:', error);
+            alert('데이터를 가져오는데 실패했습니다.');
+        }
+    });
+    
+    // 두 번째 버튼: Thymeleaf를 이용한 fetch API 방식
+    document.getElementById('countBtn2').addEventListener('click', async function() {
+        try {
+            // Thymeleaf 방식에서는 HTML 조각을 응답으로 받음
+            const response = await fetch('getProductTotalCount2', {
+                method: 'GET'
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            // Thymeleaf에서 생성된 HTML 조각을 텍스트로 받음
+            const htmlResult = await response.text();
+            
+            // jQuery의 replaceWith와 동일한 기능을 vanilla JavaScript로 구현
+            // 기존 요소를 새로운 HTML 내용으로 교체
+            const targetElement = document.getElementById('productCountView2');
+            targetElement.outerHTML = htmlResult;
+            
+        } catch (error) {
+            console.error('Thymeleaf Ajax 요청 중 오류 발생:', error);
+            alert('데이터를 가져오는데 실패했습니다.');
+        }
+    });
+});
+
+/*
+주요 차이점 정리:
+1. jQuery의 $(document).ready() → document.addEventListener('DOMContentLoaded', ...)
+2. jQuery의 $.ajax() → fetch API + async/await
+3. jQuery의 .click() → .addEventListener('click', ...)
+4. jQuery의 .text() → .textContent 
+5. jQuery의 .replaceWith() → .outerHTML
+
+fetch API의 장점:
+- 최신 JavaScript 표준으로 별도 라이브러리 불필요
+- Promise 기반으로 async/await와 자연스럽게 연동
+- 더 명시적이고 예측 가능한 API
+- 에러 처리가 더 명확함
+
+실무 팁:
+- fetch는 네트워크 에러만 reject하므로 HTTP 상태 코드 확인 필요
+- response.ok를 사용하여 성공/실패 판단
+- try-catch 블록으로 에러 처리 필수
+*/
+</script>
+</div>
+</body>
+</html>

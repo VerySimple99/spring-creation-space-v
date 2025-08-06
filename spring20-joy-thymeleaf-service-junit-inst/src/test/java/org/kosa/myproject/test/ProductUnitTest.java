@@ -27,17 +27,23 @@ public class ProductUnitTest {
 		int totalCount=productMapper.getTotalProductCount();
 		Assertions.assertNotEquals(0,totalCount);// 0 이 기대값 , totalCount 가 실제값 => 같지 않으면 통과 
 	}
+	
+	@Test
+	public void selectAllProducts() {
+		List<Product> list=productMapper.selectAllProducts();
+		Assertions.assertEquals(6, list.size());
+	}
+	@Test
+	public void register() {
+		
+		
+	}
 	@Test
 	public void selectProductById() {
 		Long id=9L;
 		//id=1L;
 		Product product=productMapper.selectProductById(id);
 		Assertions.assertNotNull(product);
-	}
-	@Test
-	public void selectAllProducts() {
-		List<Product> list=productMapper.selectAllProducts();
-		Assertions.assertEquals(6, list.size());
 	}
 	// 상품 등록 및 삭제 테스트를 해볼 수 있음 
 }
