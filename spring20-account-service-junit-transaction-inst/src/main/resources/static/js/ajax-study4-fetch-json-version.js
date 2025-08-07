@@ -129,6 +129,7 @@ async function getAccountsByCustomer() {
 				    `;
 		});
 		accountListHtml += `</tbody></table>`;
+		
 		showSuccess(accountListHtml);
 
 	} catch (error) {

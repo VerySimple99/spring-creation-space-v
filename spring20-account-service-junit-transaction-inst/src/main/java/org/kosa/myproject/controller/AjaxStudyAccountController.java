@@ -29,14 +29,9 @@ public class AjaxStudyAccountController {
     @GetMapping("/{accountNumber}")
     @ResponseBody  // Spring Boot의 @ResponseBody + Jackson이 Account를 JSON Object로 자동 변환
     public Account getAccountByNumberPath(@PathVariable Long accountNumber) {
-    	 // Service에서 계좌 조회
-        Account account = accountService.getAccountByNumber(accountNumber);        
-        //null인 경우 RuntimeException 던지기
-        // Spring Boot가 자동으로 500 에러로 변환해줌 
-        if (account == null) {
-            throw new RuntimeException("계좌번호 " + accountNumber + "에 해당하는 계좌가 존재하지 않습니다.");        }
-        
-        return account;
+    	 // Service에서 계좌 조회 : 존재하지 않는 계좌에 대한 처리를 위해   AccountService의 getAccountByNumber()에
+    	//  예외 처리 로직을 추가한다 
+        return accountService.getAccountByNumber(accountNumber);;
     }
     /**
      * 방법 2: Query Parameter 사용 (현재 방식 유지)

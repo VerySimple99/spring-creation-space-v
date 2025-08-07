@@ -191,8 +191,10 @@ public class AccountService {
         if (accountNumber == null || accountNumber <= 0) {
             throw new IllegalArgumentException("올바른 계좌번호를 입력해주세요.");
         }
-        
+        /////////// 이렇게 수정해봅니다 ////////// 
+        Account account = accountMapper.findByAccountNumber(accountNumber);
+        if(account == null)
+        	throw new RuntimeException("존재하지 않는 계좌입니다. 계좌 ID: " + accountNumber);
         return accountMapper.findByAccountNumber(accountNumber);
-    }
-    
+    }    
 }
