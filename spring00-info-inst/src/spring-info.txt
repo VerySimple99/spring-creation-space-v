@@ -757,6 +757,19 @@ Post: 사용자가 웹 폼(예: 회원가입, 결제)을 통해 데이터를 POS
 Redirect: 서버는 데이터를 처리한 후, 사용자에게 성공 페이지나 다른 페이지로 이동하라는 HTTP 302 Redirect 응답을 보냅니다.
 Get: 브라우저는 서버로부터 받은 Redirect 응답에 따라 새로운 URL로 GET 요청을 보냅니다.
           
+Thymeleaf : 
+ Spring Boot와 함께 동적 웹 페이지 렌더링에 널리 사용되는 서버사이드 Java 템플릿 엔진입니다. 
+ HTML의 구조상에서 개발하여 기존 HTML 코드를 변경하지 않고  개발하는 방식(Natural Templates)으로
+서버 실행 없이도 브라우저에서 HTML 템플릿을 직접 미리 볼 수 있도록 하여 
+프런트엔드 개발자와 백엔드 개발자 간의 협업을 용이하게 합니다.
+Thymeleaf 와 유사한 템플릿 엔진 : jsp(jstl) , freemarker , mustache , groovy 등이 있다   
+https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html
+              
+                
+사용자 요청 → 서블릿 컨테이너 → JSP 파일 확인 → .java 파일 생성 → 컴파일(.class) → 서블릿 실행 → HTML 응답
+
+사용자 요청 → 스프링 컨트롤러 → 템플릿 엔진 → HTML 파일 파싱 → 데이터 바인딩 → 완성된 HTML 응답   
+
 
 **TDD, JUnit , Given When Then**          
  TDD (Test-Driven Development)  : 개발 방법론 중 하나로, 코드를 작성하기 전에 먼저 테스트 코드를 작성하는 방식
@@ -822,10 +835,52 @@ AOP Proxy 기반의 트랜잭션 처리 방식으로 @Transactional 어노테이
              경량이고 높은 생산성이 장점 
 
 
+Fetch API : 자바스크립트의 표준 비동기 통신 API
 
+비동기 웹 개발의 두 가지 핵심 개념
+fetch와 async/await
+
+fetch: 네트워크 요청을 보내는 기능
+async/await: 그 요청의 응답을 다루는 방법
+
+
+fetch 의 역할 
+fetch는 Promise를 반환합니다.
+fetch('URL') 함수를 호출하면, 네트워크 요청이 즉시 시작됩니다. 
+이 함수는 요청이 완료될 때까지 기다리지 않고, 
+대신 Promise라는 특별한 객체를 즉시 반환합니다. 
+이 Promise는 "나중에 응답이 도착하면 성공 또는 실패 정보를 알려줄게"라고 
+약속하는 역할을 합니다.
+
+async 의 역할 
+async 함수는 Promise를 기다릴 수 있습니다.
+async 키워드가 붙은 함수 안에서만 await를 사용할 수 있습니다. 
+이 async 함수는 Promise가 완료될 때까지 자신의 실행을 일시 중지하는 능력을 갖게 됩니다.
+
+await 의 역할 
+await가 fetch의 Promise를 기다립니다.
+const response = await fetch('URL'); 코드를 보면, 
+await는 fetch가 반환한 Promise가 완료될 때까지 기다립니다. 
+하지만 이때, JavaScript의 메인 스레드는 멈추지 않습니다. 
+asyn 함수 외의 다른 코드들이 계속 실행될 수 있게 해주어 비동기 작업이 가능하게 됩니다 
+서버로부터 응답이 도착하면, fetch가 반환했던 Promise가 '완료' 상태가 됩니다. 
+그러면 await는 const response에 응답 결과를 할당한 뒤 
+async 함수의 다음 코드 라인을 실행하게 됩니다.
           
           
-          
+
+fetch	
+네트워크 요청 시작	함수 호출 시 즉시 Promise 반환, 메인 스레드를 막지 않음
+
+Promise	
+비동기 작업의 결과(미래의 값)를 담는 객체	대기', '성공', '실패' 상태를 가짐
+
+async	
+await 사용 가능 함수 선언	함수 전체가 Promise를 반환하며, await를 만나면 일시 중지됨
+
+await	
+Promise의 완료를 기다림	
+해당 async 함수만 일시 중지, 메인 스레드는 계속 다른 작업 수행         
           
           
           

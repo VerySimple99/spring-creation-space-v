@@ -20,17 +20,9 @@ public class HomeController {
 	@GetMapping("/ajax-study3")
 	public String ajaxStudy3() {
 		return "ajax-study3-fetch";
-	}
+	}	
 	@GetMapping("/ajax-study4")
 	public String ajaxStudy4() {
-		return "ajax-study4-product-fetch";
-	}
-	@GetMapping("/ajax-study5")
-	public String ajaxStudy5() {
-		return "ajax-study5-product-json-fetch";
-	}
-	@GetMapping("/ajax-study6")
-	public String ajaxStudy6() {
-		return "ajax-study6-product-thymeleaf-fetch";
+		return "ajax-study4-account-fetch-json";
 	}
 }
