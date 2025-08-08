@@ -31,7 +31,7 @@ public class AjaxStudyAccountController {
     public Account getAccountByNumberPath(@PathVariable Long accountNumber) {
     	 // Service에서 계좌 조회 : 존재하지 않는 계좌에 대한 처리를 위해   AccountService의 getAccountByNumber()에
     	//  예외 처리 로직을 추가한다 
-        return accountService.getAccountByNumber(accountNumber);;
+        return accountService.getAccountByNumber(accountNumber);
     }
     /**
      * 방법 2: Query Parameter 사용 (현재 방식 유지)

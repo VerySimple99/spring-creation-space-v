@@ -49,8 +49,7 @@ async function startAjax() {
 		// 이 조건으로 서버가 정상 응답을 했는지 쉽게 체크할 수 있습니다.
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
+        }        
         // 서버 응답을 텍스트로 변환
 		// 응답 본문(body)을 텍스트로 읽어들입니다.
 		// 이 과정도 비동기적이므로 'await'를 사용하여 데이터가 모두 읽힐 때까지 기다립니다.

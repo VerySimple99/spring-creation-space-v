@@ -66,17 +66,16 @@ async function getAccountByNumber() {
 		showError(error.message);
 	}
 }
-// 성공 메시지 표시
+// 성공 메시지
 function showSuccess(message) {
 	const resultDiv = document.getElementById('result');
 	resultDiv.innerHTML = message;
 }
 
-// 에러 메시지 표시
+// 에러 메시지
 function showError(message) {
 	const resultDiv = document.getElementById('result');
 	resultDiv.innerHTML = `<p>${message}</p>`;
-
 }
 
 
